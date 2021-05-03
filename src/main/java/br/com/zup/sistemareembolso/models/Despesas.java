@@ -12,7 +12,6 @@ public class Despesas {
     private int id;
 
     @ManyToOne()
-    @Column(nullable = false)
     private Colaborador colaborador;
 
     @Column(nullable = false)
