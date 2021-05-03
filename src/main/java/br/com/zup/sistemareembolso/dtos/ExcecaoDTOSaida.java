@@ -1,8 +1,10 @@
 package br.com.zup.sistemareembolso.dtos;
 
+import java.util.List;
+
 public class ExcecaoDTOSaida {
     private String tipo;
-    private List <ErroSaida> erros;
+    private List<ErroSaida> erros;
 
     public ExcecaoDTOSaida() {
 
