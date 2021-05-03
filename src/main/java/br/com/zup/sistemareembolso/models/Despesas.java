@@ -1,12 +1,10 @@
 package br.com.zup.sistemareembolso.models;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.*;
 import java.util.Date;
 
+@Table(name = "despesas")
+@Entity
 public class Despesas {
 
     @Id
