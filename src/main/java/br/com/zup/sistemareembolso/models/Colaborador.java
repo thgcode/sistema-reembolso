@@ -21,6 +21,9 @@ public class Colaborador {
     @Id
     private String cpf;
 
+    @Column(nullable = false)
+    private Cargo cargo;
+
     private String banco;
     private String agencia;
     private int digitoDaAgencia;
@@ -62,6 +65,14 @@ public class Colaborador {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
     }
 
     public String getBanco() {
