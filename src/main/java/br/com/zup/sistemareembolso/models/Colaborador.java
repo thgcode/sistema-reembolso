@@ -11,6 +11,9 @@ public class Colaborador {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String senha;
+
     @Column(unique = true, nullable = false)
     private String nomeCompleto;
 
@@ -35,6 +38,14 @@ public class Colaborador {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public String getNomeCompleto() {
