@@ -1,9 +1,23 @@
 package br.com.zup.sistemareembolso.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Table(name = "colaboradores")
+@Entity
 public class Colaborador {
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(unique = true, nullable = false)
     private String nomeCompleto;
+
+    @Column(unique = true, nullable = false)
+    @Id
     private String cpf;
+
     private String banco;
     private String agencia;
     private int digitoDaAgencia;
