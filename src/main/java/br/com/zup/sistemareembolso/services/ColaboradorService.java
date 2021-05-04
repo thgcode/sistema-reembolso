@@ -27,4 +27,8 @@ public class ColaboradorService {
         return optionalColaborador.orElseThrow( () -> new ColaboradorNaoExistenteException () );
     }
 
+    public void excluirColaboradorPorCpf(String cpf){
+        Colaborador colaborador = pesquisarColaboradorPorCpf(cpf);
+        colaboradorRepository.delete(colaborador);
+    }
 }
