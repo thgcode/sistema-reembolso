@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class DespesaService {
@@ -26,6 +27,17 @@ public class DespesaService {
         despesa.setColaborador(colaborador);
 
         return despesaRepository.save(despesa);
+    }
+
+    public Despesa buscarDespesaPeloId(int id){
+
+        Optional<Despesa> despesaPesquisada = despesaRepository.findById(id);
+
+        if( despesaPesquisada.isPresent() ){
+            return despesaPesquisada.get();
+        }
+
+        throw new RuntimeException("Despesa não encontrada");
     }
 
     public Iterable <Despesa> listarDespesas() {
