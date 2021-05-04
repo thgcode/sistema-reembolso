@@ -31,7 +31,7 @@ public class FiltroDeAutorizacaoJWT extends BasicAuthenticationFilter {
             throw new TokenInvalidoException("Token inválido");
         }
 
-// Pega a identificação que o usuário diz ser
+        // Pega a identificação que o usuário diz ser
         Claims claims = gerenciadorJWT.getClaims(token);
         UserDetails usuario = userDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
