@@ -1,7 +1,5 @@
 package br.com.zup.sistemareembolso.exceptions;
 
-import br.com.zup.sistemareembolso.dtos.ErroSaida;
-import br.com.zup.sistemareembolso.dtos.ExcecaoDTOSaida;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
