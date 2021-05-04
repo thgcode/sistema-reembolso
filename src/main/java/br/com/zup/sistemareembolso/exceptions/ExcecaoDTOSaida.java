@@ -1,7 +1,5 @@
 package br.com.zup.sistemareembolso.exceptions;
 
-import br.com.zup.sistemareembolso.exceptions.ErroSaida;
-
 import java.util.List;
 
 public class ExcecaoDTOSaida {
