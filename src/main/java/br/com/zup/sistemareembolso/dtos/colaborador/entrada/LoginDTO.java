@@ -1,7 +1,7 @@
 package br.com.zup.sistemareembolso.dtos.colaborador.entrada;
 
 public class LoginDTO {
-    private String email;
+    private String cpf;
     private String senha;
 
     public LoginDTO() {
@@ -13,12 +13,12 @@ public class LoginDTO {
         this.senha = senha;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCpf() {
+        return cpf;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getSenha() {
