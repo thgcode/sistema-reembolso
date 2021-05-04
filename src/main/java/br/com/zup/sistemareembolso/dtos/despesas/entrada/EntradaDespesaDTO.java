@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-public class DespesaDTO {
+public class EntradaDespesaDTO {
 
     @CPF
     private String cpf;
@@ -28,7 +28,7 @@ public class DespesaDTO {
         return listaProjetos;
     }
 
-    public DespesaDTO() {}
+    public EntradaDespesaDTO() {}
 
     public String getCpf() {
         return cpf; }
