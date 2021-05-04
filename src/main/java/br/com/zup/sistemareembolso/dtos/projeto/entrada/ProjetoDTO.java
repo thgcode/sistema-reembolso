@@ -3,19 +3,16 @@ package br.com.zup.sistemareembolso.dtos.projeto.entrada;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Projeto;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
 import java.util.Arrays;
 
 public class ProjetoDTO {
-    @@NotBlank
+    @NotBlank
     private String nomeDoProjeto;
 
     @NotBlank
     private String codigoDoProjeto;
 
-    @Positive
     private String cpfColaboradorQueCriou;
 
     public ProjetoDTO() {
@@ -44,12 +41,12 @@ public class ProjetoDTO {
         this.codigoDoProjeto = codigoDoProjeto;
     }
 
-    public int getCpfColaboradorQueCriou() {
+    public String getCpfColaboradorQueCriou() {
         return cpfColaboradorQueCriou;
     }
 
-    public void setCpfColaboradorQueCriou(int idColaboradorQueCriou) {
-        this.cpfColaboradorQueCriou = idColaboradorQueCriou;
+    public void setCpfColaboradorQueCriou(String cpfColaboradorQueCriou) {
+        this.cpfColaboradorQueCriou = cpfColaboradorQueCriou;
     }
 
     public Projeto converterDTOParaProjeto() {

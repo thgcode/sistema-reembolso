@@ -31,7 +31,7 @@ public class ProjetoService {
         throw new ProjetoNaoExistenteException();
     }
 
-    public void excluirProjetoPorCpf(int id) {
+    public void excluirProjetoPeloId(int id) {
         Projeto projeto = pesquisarProjetoPeloId(id);
 
         projetoRepository.delete(projeto);
