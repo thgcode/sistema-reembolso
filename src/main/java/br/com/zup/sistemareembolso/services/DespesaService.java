@@ -1,5 +1,6 @@
 package br.com.zup.sistemareembolso.services;
 
+import br.com.zup.sistemareembolso.exceptions.DespesaNaoEncontradaException;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.repositories.DespesaRepository;
@@ -37,7 +38,7 @@ public class DespesaService {
             return despesaPesquisada.get();
         }
 
-        throw new RuntimeException("Despesa não encontrada");
+        throw new DespesaNaoEncontradaException();
     }
 
     public Iterable <Despesa> listarDespesas() {
