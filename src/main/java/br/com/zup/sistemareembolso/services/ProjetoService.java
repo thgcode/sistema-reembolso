@@ -30,4 +30,10 @@ public class ProjetoService {
 
         throw new ProjetoNaoExistenteException();
     }
+
+    public void excluirProjetoPorCpf(int id) {
+        Projeto projeto = pesquisarProjetoPeloId(id);
+
+        projetoRepository.delete(projeto);
+    }
 }
