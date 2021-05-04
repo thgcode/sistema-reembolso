@@ -1,4 +1,4 @@
-package br.com.zup.sistemareembolso.dtos;
+package br.com.zup.sistemareembolso.exceptions;
 
 public class ErroSaida {
     private String campo;

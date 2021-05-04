@@ -2,6 +2,7 @@ package br.com.zup.sistemareembolso.models;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "despesas")
 @Entity
@@ -11,18 +12,28 @@ public class Despesa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne()
+    @ManyToOne
     private Colaborador colaborador;
+
+    @ManyToMany
+    private List<Projeto> projeto;
 
     @Column(nullable = false)
     private String descricao;
 
     private double valor;
-
     private Date dataEntrada;
     private Date dataAprovacao;
 
     private Status status;
+
+    public List<Projeto> getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(List<Projeto> projeto) {
+        this.projeto = projeto;
+    }
 
     public int getId() {
         return id;

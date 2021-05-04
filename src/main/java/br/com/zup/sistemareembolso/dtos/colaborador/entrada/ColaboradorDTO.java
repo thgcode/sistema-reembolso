@@ -1,42 +1,43 @@
-package br.com.zup.sistemareembolso.models;
+package br.com.zup.sistemareembolso.dtos.colaborador.entrada;
 
-import javax.persistence.*;
+import br.com.zup.sistemareembolso.models.Cargo;
+import br.com.zup.sistemareembolso.models.Colaborador;
+import br.com.zup.sistemareembolso.models.Projeto;
+import br.com.zup.sistemareembolso.models.TipoDaConta;
+import org.hibernate.validator.constraints.br.CPF;;import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-@Table(name = "colaboradores")
-@Entity
-public class Colaborador {
+public class ColaboradorDTO {
 
-    @Column(unique = true, nullable = false)
-    @Id
-    private String cpf;
-
-    @Column(unique = true, nullable = false)
+    @Email
     private String email;
-
-    @Column(nullable = false)
+    @NotBlank
     private String senha;
-
-    @Column(unique = true, nullable = false)
+    @NotBlank
     private String nomeCompleto;
-
-    @Column(nullable = false)
+    @CPF
+    private String cpf;
+    @NotBlank
     private Cargo cargo;
-
-    @ManyToMany
+    @NotBlank
+    private String banco;
+    @NotBlank
+    private String numeroDoBando;
+    @NotBlank
+    private String agencia;
+    @NotBlank
+    private int digitoDaAgencia;
+    @NotBlank
+    private String conta;
+    @NotBlank
+    private int digitoDaConta;
+    @NotBlank
+    private TipoDaConta tipoDaConta;
+    @NotBlank
     private List<Projeto> listaDeProjetos;
 
-    private String banco;
-    private String numeroDoBanco;
-    private String agencia;
-    private int digitoDaAgencia;
-    private String conta;
-    private int digitoDaConta;
-    private TipoDaConta tipoDaConta;
-
-
-    public Colaborador() {
-
+    public ColaboradorDTO() {
     }
 
     public String getEmail() {
@@ -87,6 +88,14 @@ public class Colaborador {
         this.banco = banco;
     }
 
+    public String getNumeroDoBando() {
+        return numeroDoBando;
+    }
+
+    public void setNumeroDoBando(String numeroDoBando) {
+        this.numeroDoBando = numeroDoBando;
+    }
+
     public String getAgencia() {
         return agencia;
     }
@@ -127,14 +136,6 @@ public class Colaborador {
         this.tipoDaConta = tipoDaConta;
     }
 
-    public String getNumeroDoBando() {
-        return numeroDoBanco;
-    }
-
-    public void setNumeroDoBando(String numeroDoBanco) {
-        this.numeroDoBanco = numeroDoBanco;
-    }
-
     public List<Projeto> getListaDeProjetos() {
         return listaDeProjetos;
     }
@@ -143,11 +144,23 @@ public class Colaborador {
         this.listaDeProjetos = listaDeProjetos;
     }
 
-    public String getNumeroDoBanco() {
-        return numeroDoBanco;
-    }
+    public Colaborador converterDTOparaColaborador(){
 
-    public void setNumeroDoBanco(String numeroDoBanco) {
-        this.numeroDoBanco = numeroDoBanco;
+        Colaborador colaborador = new Colaborador();
+        colaborador.setEmail(this.email);
+        colaborador.setSenha(this.senha);
+        colaborador.setNomeCompleto(this.nomeCompleto);
+        colaborador.setCpf(this.cpf);
+        colaborador.setCargo(this.cargo);
+        colaborador.setBanco(this.banco);
+        colaborador.setNumeroDoBando(this.numeroDoBando);
+        colaborador.setAgencia(this.agencia);
+        colaborador.setDigitoDaAgencia(this.digitoDaAgencia);
+        colaborador.setConta(this.conta);
+        colaborador.setDigitoDaConta(this.digitoDaConta);
+        colaborador.setTipoDaConta(this.tipoDaConta);
+        colaborador.setListaDeProjetos(this.listaDeProjetos);
+
+        return colaborador;
     }
 }
