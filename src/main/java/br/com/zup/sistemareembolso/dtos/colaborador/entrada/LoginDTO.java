@@ -8,8 +8,8 @@ public class LoginDTO {
 
     }
 
-    public LoginDTO(String email, String senha) {
-        this.email = email;
+    public LoginDTO(String cpf, String senha) {
+        this.cpf = cpf;
         this.senha = senha;
     }
 
