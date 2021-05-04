@@ -24,7 +24,6 @@ public class DespesaService {
 
         /* Verificar se existe o colaborador */
         Colaborador colaborador = colaboradorService.pesquisarColaboradorPorCpf(despesa.getColaborador().getCpf());
-
         despesa.setColaborador(colaborador);
 
         return despesaRepository.save(despesa);
