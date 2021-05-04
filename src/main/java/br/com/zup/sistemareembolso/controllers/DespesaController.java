@@ -25,5 +25,15 @@ public class DespesaController {
 
         return SaidaDespesaDTO.converterDespesaParaDTO(objetoDespesa);
     }
+
+    @GetMapping
+    public Iterable <Despesa> listarTodasDespesas() {
+        return despesaService.listarDespesas();
+    }
+
+    @GetMapping("{id}/")
+    public Despesa buscarDespesaPeloId(@PathVariable int id){
+        return despesaService.buscarDespesaPeloId(id);
+    }
 }
 
