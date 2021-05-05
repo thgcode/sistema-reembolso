@@ -44,13 +44,4 @@ public class DespesaService {
     public Iterable <Despesa> listarDespesas() {
         return despesaRepository.findAll();
     }
-
-    public Iterable<Despesa> pesquisarDespesasPorColaborador(FiltroDespesaColaborador filtro) {
-
-        if (filtro == null) {
-            return despesaRepository.findAll();
-        }
-
-        return despesaRepository.findAllByColaboradorDespesas(filtro.getCpf());
-    }
 }

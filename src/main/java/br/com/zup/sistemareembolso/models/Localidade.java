@@ -9,7 +9,7 @@ public class Localidade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codLocalidade;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String nome;
 
     public Localidade() {

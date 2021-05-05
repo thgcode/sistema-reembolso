@@ -17,6 +17,9 @@ public class Projeto {
     @Column
     private String codigoDoProjeto;
 
+    @ManyToOne
+    private Localidade localidade;
+
     public Projeto() {
     }
 
@@ -43,4 +46,12 @@ public class Projeto {
     public void setCodigoDoProjeto(String codigoDoProjeto) {
         this.codigoDoProjeto = codigoDoProjeto;
     }
+
+    public Localidade getLocalidade() {
+        return localidade;
     }
+
+    public void setLocalidade(Localidade localidade) {
+        this.localidade = localidade;
+    }
+}

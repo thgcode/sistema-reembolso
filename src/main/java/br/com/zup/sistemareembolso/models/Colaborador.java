@@ -1,7 +1,6 @@
 package br.com.zup.sistemareembolso.models;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Table(name = "colaboradores")
 @Entity
@@ -33,9 +32,6 @@ public class Colaborador {
     private String conta;
     private int digitoDaConta;
     private TipoDaConta tipoDaConta;
-
-    @OneToMany()
-    private List<Despesa> despesas;
 
     public Colaborador() { }
 
@@ -82,9 +78,6 @@ public class Colaborador {
     public String getBanco() {
         return banco;
     }
-
-    public List<Despesa> getDespesas() { return despesas; }
-    public void setDespesas(List<Despesa> despesas) { this.despesas = despesas; }
 
     public void setBanco(String banco) {
         this.banco = banco;

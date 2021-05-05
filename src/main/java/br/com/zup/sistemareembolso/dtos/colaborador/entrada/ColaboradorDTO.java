@@ -23,7 +23,7 @@ public class ColaboradorDTO {
     //@NotBlank
     private String banco;
     //@NotBlank
-    private String numeroDoBando;
+    private String numeroDoBanco;
     //@NotBlank
     private String agencia;
     //@NotBlank
@@ -88,12 +88,12 @@ public class ColaboradorDTO {
         this.banco = banco;
     }
 
-    public String getNumeroDoBando() {
-        return numeroDoBando;
+    public String getNumeroDoBanco() {
+        return numeroDoBanco;
     }
 
-    public void setNumeroDoBando(String numeroDoBando) {
-        this.numeroDoBando = numeroDoBando;
+    public void setNumeroDoBanco(String numeroDoBanco) {
+        this.numeroDoBanco = numeroDoBanco;
     }
 
     public String getAgencia() {
@@ -153,7 +153,7 @@ public class ColaboradorDTO {
         colaborador.setCpf(this.cpf);
         colaborador.setCargo(this.cargo);
         colaborador.setBanco(this.banco);
-        colaborador.setNumeroDoBando(this.numeroDoBando);
+        colaborador.setNumeroDoBando(this.numeroDoBanco);
         colaborador.setAgencia(this.agencia);
         colaborador.setDigitoDaAgencia(this.digitoDaAgencia);
         colaborador.setConta(this.conta);

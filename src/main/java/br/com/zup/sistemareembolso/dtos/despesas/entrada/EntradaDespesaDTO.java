@@ -1,9 +1,6 @@
 package br.com.zup.sistemareembolso.dtos.despesas.entrada;
 
-import br.com.zup.sistemareembolso.models.Colaborador;
-import br.com.zup.sistemareembolso.models.Despesa;
-import br.com.zup.sistemareembolso.models.Projeto;
-import br.com.zup.sistemareembolso.models.Status;
+import br.com.zup.sistemareembolso.models.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.NotBlank;
@@ -23,6 +20,8 @@ public class EntradaDespesaDTO {
     private Status status;
 
     private int projetoId;
+
+    private Integer codCategoria;
 
     public EntradaDespesaDTO() {}
 
@@ -54,6 +53,14 @@ public class EntradaDespesaDTO {
         this.projetoId = projetoId;
     }
 
+    public Integer getCodCategoria() {
+        return codCategoria;
+    }
+
+    public void setCodCategoria(Integer codCategoria) {
+        this.codCategoria = codCategoria;
+    }
+
     public Despesa converterDTOparaDespesas(){
         Despesa despesa = new Despesa();
 
@@ -69,6 +76,11 @@ public class EntradaDespesaDTO {
         despesa.setDescricao(this.descricao);
         despesa.setValor(this.valor);
         despesa.setStatus(this.status);
+
+        Categoria categoria = new Categoria();
+        categoria.setCodCategoria(this.codCategoria);
+
+        despesa.setCategoria(categoria);
 
         return despesa;
     }
