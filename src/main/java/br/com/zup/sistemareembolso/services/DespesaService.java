@@ -1,6 +1,5 @@
 package br.com.zup.sistemareembolso.services;
 
-import br.com.zup.sistemareembolso.dtos.colaborador.filtro.entrada.FiltroDespesaColaborador;
 import br.com.zup.sistemareembolso.exceptions.DespesaNaoEncontradaException;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Despesa;

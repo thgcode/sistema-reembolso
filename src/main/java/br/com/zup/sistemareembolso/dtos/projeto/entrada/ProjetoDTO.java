@@ -14,15 +14,11 @@ public class ProjetoDTO {
 
     private Integer localidade;
 
-    public ProjetoDTO() {
-
-    }
-
+    public ProjetoDTO() { }
 
     public String getNomeDoProjeto() {
         return nomeDoProjeto;
     }
-
     public void setNomeDoProjeto(String nomeDoProjeto) {
         this.nomeDoProjeto = nomeDoProjeto;
     }
@@ -30,7 +26,6 @@ public class ProjetoDTO {
     public String getCodigoDoProjeto() {
         return codigoDoProjeto;
     }
-
     public void setCodigoDoProjeto(String codigoDoProjeto) {
         this.codigoDoProjeto = codigoDoProjeto;
     }
@@ -38,7 +33,6 @@ public class ProjetoDTO {
     public Integer getLocalidade() {
         return localidade;
     }
-
     public void setLocalidade(Integer localidade) {
         this.localidade = localidade;
     }
@@ -52,6 +46,7 @@ public class ProjetoDTO {
         Localidade localidade = new Localidade();
 
         localidade.setCodLocalidade(this.localidade);
+
         projeto.setLocalidade(localidade);
 
         return projeto;
