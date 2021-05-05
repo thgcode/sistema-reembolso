@@ -18,7 +18,7 @@ public class LocalidadeDTO {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
+
     public Localidade converterDTOParaLocalidade() {
         Localidade localidade = new Localidade();
         localidade.setNome(nome);
