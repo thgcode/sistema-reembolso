@@ -24,6 +24,9 @@ public class Despesa {
     private LocalDate dataAprovacao;
     private Status status;
 
+    @ManyToOne
+    private Categoria categoria;
+
     public int getId() {
         return id;
     }
@@ -64,5 +67,13 @@ public class Despesa {
     public Projeto getProjeto() { return projeto; }
     public void setProjeto(Projeto projeto) {
         this.projeto = projeto;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 }

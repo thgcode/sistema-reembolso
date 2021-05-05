@@ -5,7 +5,6 @@ import br.com.zup.sistemareembolso.models.Localidade;
 import javax.validation.constraints.NotBlank;
 
 public class LocalidadeDTO {
-    @NotBlank
     private String nome;
 
     public LocalidadeDTO() {
