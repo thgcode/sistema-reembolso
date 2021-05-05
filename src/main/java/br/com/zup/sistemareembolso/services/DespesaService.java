@@ -1,7 +1,10 @@
 package br.com.zup.sistemareembolso.services;
 
+import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoEAprovadorException;
+import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoEstaNoProjetoException;
 import br.com.zup.sistemareembolso.exceptions.DespesaJaAprovadaException;
 import br.com.zup.sistemareembolso.exceptions.DespesaNaoEncontradaException;
+import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.models.Projeto;
@@ -64,6 +67,14 @@ public class DespesaService {
     public void validarSePodeAprovarDespesa(Despesa despesaDoBanco, Colaborador colaboradorDoBanco) {
         if (despesaDoBanco.getStatus() == Status.APROVADO) {
             throw new DespesaJaAprovadaException();
+        }
+
+        if (colaboradorDoBanco.getCargo().equals(Cargo.OPERACIONAL)) {
+            throw new ColaboradorNaoEAprovadorException();
+        }
+
+        if (!colaboradorDoBanco.getProjeto().equals(despesaDoBanco.getProjeto())) {
+            throw new ColaboradorNaoEstaNoProjetoException();
         }
     }
 
