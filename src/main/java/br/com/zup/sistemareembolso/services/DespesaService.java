@@ -4,6 +4,7 @@ import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoEAprovadorException;
 import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoEstaNoProjetoException;
 import br.com.zup.sistemareembolso.exceptions.DespesaJaAprovadaException;
 import br.com.zup.sistemareembolso.exceptions.DespesaNaoEncontradaException;
+import br.com.zup.sistemareembolso.exceptions.*;
 import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Despesa;
@@ -83,6 +84,10 @@ public class DespesaService {
         Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
 
         validarSePodeAprovarDespesa(despesaDoBanco, colaboradorDoBanco);
+
+        if (despesaDoBanco.getProjeto().getVerba() > despesaDoBanco.getValor()) {
+            throw new VerbaDoProjetoInsuficienteException();
+        }
 
         despesaDoBanco.setDataAprovacao(LocalDate.now());
         despesaDoBanco.setAprovador(colaboradorDoBanco);
