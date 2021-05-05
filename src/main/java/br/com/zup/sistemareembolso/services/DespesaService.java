@@ -1,10 +1,11 @@
 package br.com.zup.sistemareembolso.services;
 
+import br.com.zup.sistemareembolso.exceptions.DespesaJaAprovadaException;
 import br.com.zup.sistemareembolso.exceptions.DespesaNaoEncontradaException;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Despesa;
-import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.models.Projeto;
+import br.com.zup.sistemareembolso.models.Status;
 import br.com.zup.sistemareembolso.repositories.DespesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class DespesaService {
 
     @Autowired
     private DespesaRepository despesaRepository;
+
     @Autowired
     private ColaboradorService colaboradorService;
     @Autowired
@@ -38,7 +40,6 @@ public class DespesaService {
     }
 
     public Despesa buscarDespesaPeloId(int id){
-
         Optional<Despesa> despesaPesquisada = despesaRepository.findById(id);
 
         if( despesaPesquisada.isPresent() ){
@@ -50,5 +51,43 @@ public class DespesaService {
 
     public Iterable <Despesa> listarDespesas() {
         return despesaRepository.findAll();
+    }
+
+    public Iterable<Despesa> pesquisarDespesasPorColaborador(Colaborador colaborador) {
+        if (colaborador == null) {
+            return despesaRepository.findAll();
+        }
+
+        return despesaRepository.findAllByColaborador(colaborador);
+    }
+
+    public void validarSePodeAprovarDespesa(Despesa despesaDoBanco, Colaborador colaboradorDoBanco) {
+        if (despesaDoBanco.getStatus() == Status.APROVADO) {
+            throw new DespesaJaAprovadaException();
+        }
+    }
+
+    public Despesa aprovarDespesa(Despesa despesa, Colaborador colaborador) {
+        Despesa despesaDoBanco = buscarDespesaPeloId(despesa.getId());
+        Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
+
+        validarSePodeAprovarDespesa(despesaDoBanco, colaboradorDoBanco);
+
+        despesaDoBanco.setDataAprovacao(LocalDate.now());
+        despesaDoBanco.setStatus(Status.APROVADO);
+
+        return despesaRepository.save(despesaDoBanco);
+    }
+
+    public Despesa desaprovarDespesa(Despesa despesa, Colaborador colaborador) {
+        Despesa despesaDoBanco = buscarDespesaPeloId(despesa.getId());
+        Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
+
+        validarSePodeAprovarDespesa(despesaDoBanco, colaborador);
+
+        despesaDoBanco.setDataAprovacao(LocalDate.now());
+        despesaDoBanco.setStatus(Status.NAO_APROVADO);
+
+        return despesaRepository.save(despesaDoBanco);
     }
 }
