@@ -28,12 +28,12 @@ public class JWTConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     private static final String[] PUBLIC_MATCHERS_GET = {
+            "/**"
     };
 
     private static final String[] PUBLIC_MATCHERS_POST = {
-            "/zupper/",
+            "/**",
     };
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
