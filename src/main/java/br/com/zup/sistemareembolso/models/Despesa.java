@@ -1,8 +1,6 @@
 package br.com.zup.sistemareembolso.models;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
 import java.time.LocalDate;
 
 @Table(name = "despesas")
@@ -16,8 +14,8 @@ public class Despesa {
     @ManyToOne
     private Colaborador colaborador;
 
-    @ManyToMany
-    private List<Projeto> projeto;
+    @ManyToOne
+    private Projeto projeto;
 
     @Column(nullable = false)
     private String descricao;
@@ -63,8 +61,8 @@ public class Despesa {
         this.status = status;
     }
 
-    public List<Projeto> getProjeto() { return projeto; }
-    public void setProjeto(List<Projeto> projeto) {
+    public Projeto getProjeto() { return projeto; }
+    public void setProjeto(Projeto projeto) {
         this.projeto = projeto;
     }
 }

@@ -5,11 +5,9 @@ import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.models.Status;
 
-import java.util.List;
-
 public class SaidaDespesaDTO {
     private Colaborador colaborador;
-    private List<Projeto> projetos;
+    private Projeto projeto;
     private String descricao;
     private double valor;
     private Status status;
@@ -19,8 +17,8 @@ public class SaidaDespesaDTO {
     public Colaborador getColaborador() { return colaborador; }
     public void setColaborador(Colaborador colaborador) { this.colaborador = colaborador; }
 
-    public List<Projeto> getProjetos() { return projetos; }
-    public void setProjetos(List<Projeto> projetos) { this.projetos = projetos; }
+    public Projeto getProjeto() { return projeto; }
+    public void setProjeto(Projeto projeto) { this.projeto = projeto; }
 
     public String getDescricao() { return descricao; }
     public void setDescricao(String descricao) { this.descricao = descricao; }
@@ -35,7 +33,7 @@ public class SaidaDespesaDTO {
         SaidaDespesaDTO saidaDespesaDTO = new SaidaDespesaDTO();
 
         saidaDespesaDTO.setColaborador(despesa.getColaborador());
-        saidaDespesaDTO.setProjetos(despesa.getProjeto());
+        saidaDespesaDTO.setProjeto(despesa.getProjeto());
         saidaDespesaDTO.setDescricao(despesa.getDescricao());
         saidaDespesaDTO.setValor(despesa.getValor());
         saidaDespesaDTO.setStatus(despesa.getStatus());

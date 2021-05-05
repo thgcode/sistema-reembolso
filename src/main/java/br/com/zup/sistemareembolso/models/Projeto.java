@@ -17,12 +17,6 @@ public class Projeto {
     @Column
     private String codigoDoProjeto;
 
-    @OneToMany
-    private List<Despesa> despesa;
-
-    @ManyToMany
-    private List<Colaborador> colaboradores;
-
     public Projeto() {
     }
 
@@ -49,20 +43,4 @@ public class Projeto {
     public void setCodigoDoProjeto(String codigoDoProjeto) {
         this.codigoDoProjeto = codigoDoProjeto;
     }
-
-    public List<Despesa> getDespesa() {
-        return despesa;
     }
-
-    public void setDespesa(List<Despesa> despesa) {
-        this.despesa = despesa;
-    }
-
-    public List<Colaborador> getColaboradors() {
-        return colaboradores;
-    }
-
-    public void setColaboradors(List<Colaborador> colaboradors) {
-        this.colaboradores = colaboradors;
-    }
-}
