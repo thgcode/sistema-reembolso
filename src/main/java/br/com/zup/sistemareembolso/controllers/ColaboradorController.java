@@ -16,12 +16,7 @@ public class ColaboradorController {
     @Autowired
     private ColaboradorService colaboradorService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Colaborador cadastrarColaborador(@RequestBody @Valid ColaboradorDTO colaboradorDTO){
-            Colaborador colaborador = colaboradorDTO.converterDTOparaColaborador();
-            return colaboradorService.adicionarColaborador(colaborador);
-    }
+
 
     @GetMapping("{cpf}/")
     @ResponseStatus(HttpStatus.OK)

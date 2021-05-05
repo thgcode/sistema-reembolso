@@ -18,7 +18,7 @@ public class CategoriaService {
         return categoriaRepository.save(categoria);
     }
 
-    public  Iterable < Categoria > pesquisandoTodasCategorias () {
+    public  Iterable <Categoria> pesquisandoTodasCategorias () {
         return categoriaRepository.findAll();
     }
 
