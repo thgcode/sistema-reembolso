@@ -3,6 +3,7 @@ package br.com.zup.sistemareembolso.controllers;
 import br.com.zup.sistemareembolso.dtos.despesas.entrada.EntradaDespesaDTO;
 import br.com.zup.sistemareembolso.dtos.despesas.saida.SaidaDespesaDTO;
 import br.com.zup.sistemareembolso.models.Despesa;
+import br.com.zup.sistemareembolso.models.Status;
 import br.com.zup.sistemareembolso.services.DespesaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,11 @@ public class DespesaController {
     @GetMapping("{id}/")
     public Despesa buscarDespesaPeloId(@PathVariable int id){
         return despesaService.buscarDespesaPeloId(id);
+    }
+
+    @GetMapping("projetos/{codProjeto}/paraAprovacao")
+    public Iterable <Despesa> pesquisarDespesasParaAprovacao(@PathVariable int codProjeto) {
+        return despesaService.pesquisarDespesasEmUmProjetoComOStatus(codProjeto, Status.ENVIADO_PARA_APROVACAO );
     }
 }
 

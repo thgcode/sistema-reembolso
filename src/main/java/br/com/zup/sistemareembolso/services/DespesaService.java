@@ -21,6 +21,9 @@ public class DespesaService {
     private ProjetoService projetoService;
 
 
+    @Autowired
+    private ProjetoService projetoService;
+
     public Despesa adicionarDespesa(Despesa despesa) {
 
         despesa.setDataEntrada(LocalDate.now());
@@ -101,7 +104,9 @@ public class DespesaService {
         return despesaRepository.save(despesaDoBanco);
     }
 
-    public Iterable <Despesa> pesquisarDespesasEmUmProjetoComOStatus(Projeto projeto, Status status) {
+    public Iterable <Despesa> pesquisarDespesasEmUmProjetoComOStatus(int codProjeto, Status status) {
+        Projeto projeto = projetoService.pesquisarProjetoPeloId(codProjeto);
+
         return despesaRepository.findAllByProjetoAndStatus(projeto, status);
     }
 }
