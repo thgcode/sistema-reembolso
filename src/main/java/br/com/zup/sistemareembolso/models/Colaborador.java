@@ -23,8 +23,8 @@ public class Colaborador {
     @Column(nullable = false)
     private Cargo cargo;
 
-    @ManyToMany
-    private List<Projeto> listaDeProjetos;
+    @ManyToOne
+    private Projeto projeto;
 
     private String banco;
     private String numeroDoBanco;
@@ -138,12 +138,12 @@ public class Colaborador {
         this.numeroDoBanco = numeroDoBanco;
     }
 
-    public List<Projeto> getListaDeProjetos() {
-        return listaDeProjetos;
+    public Projeto getProjeto() {
+        return projeto;
     }
 
-    public void setListaDeProjetos(List<Projeto> listaDeProjetos) {
-        this.listaDeProjetos = listaDeProjetos;
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
     }
 
     public String getNumeroDoBanco() {

@@ -10,32 +10,32 @@ import java.util.List;
 
 public class ColaboradorDTO {
 
-    @Email
+    //@Email
     private String email;
-    @NotBlank
+    //@NotBlank
     private String senha;
-    @NotBlank
+    //@NotBlank
     private String nomeCompleto;
-    @CPF
+    //@CPF
     private String cpf;
-    @NotBlank
+    //@NotBlank
     private Cargo cargo;
-    @NotBlank
+    //@NotBlank
     private String banco;
-    @NotBlank
+    //@NotBlank
     private String numeroDoBando;
-    @NotBlank
+    //@NotBlank
     private String agencia;
-    @NotBlank
+    //@NotBlank
     private int digitoDaAgencia;
-    @NotBlank
+    //@NotBlank
     private String conta;
-    @NotBlank
+    //@NotBlank
     private int digitoDaConta;
-    @NotBlank
+    //@NotBlank
     private TipoDaConta tipoDaConta;
-    @NotBlank
-    private List<Projeto> listaDeProjetos;
+
+    private int projetoId;
 
     public ColaboradorDTO() {
     }
@@ -136,12 +136,12 @@ public class ColaboradorDTO {
         this.tipoDaConta = tipoDaConta;
     }
 
-    public List<Projeto> getListaDeProjetos() {
-        return listaDeProjetos;
+    public int getProjetoId() {
+        return projetoId;
     }
 
-    public void setListaDeProjetos(List<Projeto> listaDeProjetos) {
-        this.listaDeProjetos = listaDeProjetos;
+    public void setProjetoId(int projetoId) {
+        this.projetoId = projetoId;
     }
 
     public Colaborador converterDTOparaColaborador(){
@@ -159,7 +159,11 @@ public class ColaboradorDTO {
         colaborador.setConta(this.conta);
         colaborador.setDigitoDaConta(this.digitoDaConta);
         colaborador.setTipoDaConta(this.tipoDaConta);
-        colaborador.setListaDeProjetos(this.listaDeProjetos);
+
+        Projeto projeto = new Projeto();
+        projeto.setId(projetoId);
+
+        colaborador.setProjeto(projeto);
 
         return colaborador;
     }
