@@ -74,6 +74,7 @@ public class DespesaService {
         validarSePodeAprovarDespesa(despesaDoBanco, colaboradorDoBanco);
 
         despesaDoBanco.setDataAprovacao(LocalDate.now());
+        despesaDoBanco.setAprovador(colaboradorDoBanco);
         despesaDoBanco.setStatus(Status.APROVADO);
 
         return despesaRepository.save(despesaDoBanco);
@@ -86,6 +87,7 @@ public class DespesaService {
         validarSePodeAprovarDespesa(despesaDoBanco, colaborador);
 
         despesaDoBanco.setDataAprovacao(LocalDate.now());
+        despesa.setAprovador(colaboradorDoBanco);
         despesaDoBanco.setStatus(Status.NAO_APROVADO);
 
         return despesaRepository.save(despesaDoBanco);
