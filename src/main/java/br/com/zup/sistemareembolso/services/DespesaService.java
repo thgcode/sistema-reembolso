@@ -1,15 +1,7 @@
 package br.com.zup.sistemareembolso.services;
 
-import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoEAprovadorException;
-import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoEstaNoProjetoException;
-import br.com.zup.sistemareembolso.exceptions.DespesaJaAprovadaException;
-import br.com.zup.sistemareembolso.exceptions.DespesaNaoEncontradaException;
 import br.com.zup.sistemareembolso.exceptions.*;
-import br.com.zup.sistemareembolso.models.Cargo;
-import br.com.zup.sistemareembolso.models.Colaborador;
-import br.com.zup.sistemareembolso.models.Despesa;
-import br.com.zup.sistemareembolso.models.Projeto;
-import br.com.zup.sistemareembolso.models.Status;
+import br.com.zup.sistemareembolso.models.*;
 import br.com.zup.sistemareembolso.repositories.DespesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,5 +99,9 @@ public class DespesaService {
         despesaDoBanco.setStatus(Status.NAO_APROVADO);
 
         return despesaRepository.save(despesaDoBanco);
+    }
+
+    public Iterable <Despesa> pesquisarDespesasEmUmProjetoComOStatus(Projeto projeto, Status status) {
+        return despesaRepository.findAllByProjetoAndStatus(projeto, status);
     }
 }
