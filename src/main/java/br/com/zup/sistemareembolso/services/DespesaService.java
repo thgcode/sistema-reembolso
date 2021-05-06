@@ -91,7 +91,7 @@ public class DespesaService {
         Despesa despesaDoBanco = buscarDespesaPeloId(despesa.getId());
         Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
 
-        validarSePodeAprovarDespesa(despesaDoBanco, colaborador);
+        validarSePodeAprovarDespesa(despesaDoBanco, colaboradorDoBanco);
 
         despesaDoBanco.setDataAprovacao(LocalDate.now());
         despesa.setAprovador(colaboradorDoBanco);
