@@ -7,7 +7,6 @@ import java.util.Collection;
 
 public class ColaboradorLogin implements UserDetails {
     private String cpf;
-    private String email;
     private String senha;
 
     public ColaboradorLogin() {
@@ -16,16 +15,7 @@ public class ColaboradorLogin implements UserDetails {
 
     public ColaboradorLogin(String cpf, String email, String senha) {
         this.cpf = cpf;
-        this.email = email;
         this.senha = senha;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getCpf() {
@@ -56,7 +46,7 @@ public class ColaboradorLogin implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return cpf;
     }
 
     @Override
