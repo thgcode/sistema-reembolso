@@ -1,24 +1,25 @@
 package br.com.zup.sistemareembolso.models;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Table(name = "projetos")
 @Entity
 public class Projeto {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(nullable = false)
     private String nomeDoProjeto;
 
-    @Column
+    @Column(nullable = false)
     private String codigoDoProjeto;
 
     @ManyToOne
     private Localidade localidade;
+
+    @Column(nullable = false)
+    private double verba;
 
     public Projeto() {
     }
@@ -53,5 +54,13 @@ public class Projeto {
 
     public void setLocalidade(Localidade localidade) {
         this.localidade = localidade;
+    }
+
+    public double getVerba() {
+        return verba;
+    }
+
+    public void setVerba(double verba) {
+        this.verba = verba;
     }
 }

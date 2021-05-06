@@ -15,6 +15,9 @@ public class Despesa {
     private Colaborador colaborador;
 
     @ManyToOne
+    private Colaborador aprovador;
+
+    @ManyToOne
     private Projeto projeto;
 
     @Column(nullable = false)
@@ -39,6 +42,14 @@ public class Despesa {
     }
     public void setColaborador(Colaborador colaborador) {
         this.colaborador = colaborador;
+    }
+
+    public Colaborador getAprovador() {
+        return aprovador;
+    }
+
+    public void setAprovador(Colaborador aprovador) {
+        this.aprovador = aprovador;
     }
 
     public String getDescricao() {

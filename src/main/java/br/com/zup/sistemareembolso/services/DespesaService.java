@@ -1,10 +1,7 @@
 package br.com.zup.sistemareembolso.services;
 
-import br.com.zup.sistemareembolso.exceptions.DespesaNaoEncontradaException;
-import br.com.zup.sistemareembolso.models.Colaborador;
-import br.com.zup.sistemareembolso.models.Despesa;
-import br.com.zup.sistemareembolso.models.Localidade;
-import br.com.zup.sistemareembolso.models.Projeto;
+import br.com.zup.sistemareembolso.exceptions.*;
+import br.com.zup.sistemareembolso.models.*;
 import br.com.zup.sistemareembolso.repositories.DespesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +14,11 @@ public class DespesaService {
 
     @Autowired
     private DespesaRepository despesaRepository;
+
     @Autowired
     private ColaboradorService colaboradorService;
     @Autowired
     private ProjetoService projetoService;
-
 
     public Despesa adicionarDespesa(Despesa despesa) {
 
@@ -38,7 +35,6 @@ public class DespesaService {
     }
 
     public Despesa buscarDespesaPeloId(int id){
-
         Optional<Despesa> despesaPesquisada = despesaRepository.findById(id);
 
         if( despesaPesquisada.isPresent() ){
@@ -50,5 +46,63 @@ public class DespesaService {
 
     public Iterable <Despesa> listarDespesas() {
         return despesaRepository.findAll();
+    }
+
+    public Iterable<Despesa> pesquisarDespesasPorColaborador(Colaborador colaborador) {
+        if (colaborador == null) {
+            return despesaRepository.findAll();
+        }
+
+        return despesaRepository.findAllByColaborador(colaborador);
+    }
+
+    public void validarSePodeAprovarDespesa(Despesa despesaDoBanco, Colaborador colaboradorDoBanco) {
+        if (despesaDoBanco.getStatus() == Status.APROVADO) {
+            throw new DespesaJaAprovadaException();
+        }
+
+        if (colaboradorDoBanco.getCargo().equals(Cargo.OPERACIONAL)) {
+            throw new ColaboradorNaoEAprovadorException();
+        }
+
+        if (!colaboradorDoBanco.getProjeto().equals(despesaDoBanco.getProjeto())) {
+            throw new ColaboradorNaoEstaNoProjetoException();
+        }
+    }
+
+    public Despesa aprovarDespesa(Despesa despesa, Colaborador colaborador) {
+        Despesa despesaDoBanco = buscarDespesaPeloId(despesa.getId());
+        Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
+
+        validarSePodeAprovarDespesa(despesaDoBanco, colaboradorDoBanco);
+
+        if (despesaDoBanco.getProjeto().getVerba() > despesaDoBanco.getValor()) {
+            throw new VerbaDoProjetoInsuficienteException();
+        }
+
+        despesaDoBanco.setDataAprovacao(LocalDate.now());
+        despesaDoBanco.setAprovador(colaboradorDoBanco);
+        despesaDoBanco.setStatus(Status.APROVADO);
+
+        return despesaRepository.save(despesaDoBanco);
+    }
+
+    public Despesa desaprovarDespesa(Despesa despesa, Colaborador colaborador) {
+        Despesa despesaDoBanco = buscarDespesaPeloId(despesa.getId());
+        Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
+
+        validarSePodeAprovarDespesa(despesaDoBanco, colaborador);
+
+        despesaDoBanco.setDataAprovacao(LocalDate.now());
+        despesa.setAprovador(colaboradorDoBanco);
+        despesaDoBanco.setStatus(Status.NAO_APROVADO);
+
+        return despesaRepository.save(despesaDoBanco);
+    }
+
+    public Iterable <Despesa> pesquisarDespesasEmUmProjetoComOStatus(int codProjeto, Status status) {
+        Projeto projeto = projetoService.pesquisarProjetoPeloId(codProjeto);
+
+        return despesaRepository.findAllByProjetoAndStatus(projeto, status);
     }
 }
