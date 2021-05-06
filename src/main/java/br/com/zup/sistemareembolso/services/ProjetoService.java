@@ -1,6 +1,7 @@
 package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.ProjetoNaoExistenteException;
+import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.repositories.ProjetoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,12 @@ public class ProjetoService {
     @Autowired
     private ProjetoRepository projetoRepository;
 
+    @Autowired
+    private LocalidadeService localidadeService;
+
     public Projeto adicionarProjeto(Projeto projeto) {
+        Localidade localidade = localidadeService.pesquisarLocalidadePeloCodigo(projeto.getLocalidade().getCodLocalidade());
+        projeto.setLocalidade(localidade);
         return projetoRepository.save(projeto);
     }
 

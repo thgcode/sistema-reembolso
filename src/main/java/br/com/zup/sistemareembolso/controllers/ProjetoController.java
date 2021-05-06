@@ -22,9 +22,9 @@ public class ProjetoController {
     @ResponseStatus(HttpStatus.CREATED)
     public SaidaProjetoDTO adicionarProjeto(@Valid @RequestBody ProjetoDTO projetoDTO) {
         Projeto projeto = projetoDTO.converterDTOParaProjeto();
-        Projeto objetoProduto = projetoService.adicionarProjeto(projeto);
+        Projeto objetoProjeto = projetoService.adicionarProjeto(projeto);
 
-        return SaidaProjetoDTO.converterProjetoParaDTO(objetoProduto);
+        return SaidaProjetoDTO.converterProjetoParaDTO(objetoProjeto);
     }
 
     @GetMapping
