@@ -1,5 +1,6 @@
 package br.com.zup.sistemareembolso.controllers;
 
+import br.com.zup.sistemareembolso.dtos.despesas.entrada.AtualizaDespesaDTO;
 import br.com.zup.sistemareembolso.dtos.despesas.entrada.EntradaDespesaDTO;
 import br.com.zup.sistemareembolso.dtos.despesas.saida.SaidaDespesaDTO;
 import br.com.zup.sistemareembolso.jwt.ColaboradorLogin;
@@ -38,6 +39,14 @@ public class DespesaController {
     @GetMapping("{id}/")
     public Despesa buscarDespesaPeloId(@PathVariable int id){
         return despesaService.buscarDespesaPeloId(id);
+    }
+
+    @PatchMapping("{id}/")
+    public Despesa atualizarDespesaParcial(@PathVariable int id,
+                                           @RequestBody @Valid AtualizaDespesaDTO
+                                                 despesaDTO){
+        Despesa despesa = despesaDTO.atualizarDTOParaDespesa(id);
+        return despesaService.atualizarDespesaParcial(despesa);
     }
 
     @GetMapping("projetos/{codProjeto}/paraAprovacao")
