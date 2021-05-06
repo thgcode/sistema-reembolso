@@ -21,7 +21,7 @@ public class DespesaService {
     private ProjetoService projetoService;
 
     public Despesa adicionarDespesa(Despesa despesa) {
-
+        despesa.setStatus(Status.ENVIADO_PARA_APROVACAO);
         despesa.setDataEntrada(LocalDate.now());
 
         /* Verificar se existe o colaborador */
