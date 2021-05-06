@@ -17,6 +17,10 @@ public class DespesaService {
 
     @Autowired
     private ColaboradorService colaboradorService;
+
+    @Autowired
+    private NotaFiscalService notaFiscalService;
+
     @Autowired
     private ProjetoService projetoService;
 
@@ -30,6 +34,9 @@ public class DespesaService {
 
         Projeto projeto = projetoService.pesquisarProjetoPeloId(despesa.getProjeto().getId());
         despesa.setProjeto(projeto);
+
+        NotaFiscal notaDoBanco = notaFiscalService.adicionarNotaFiscal(despesa.getNotaFiscal());
+        despesa.setNotaFiscal(notaDoBanco);
 
         return despesaRepository.save(despesa);
     }
