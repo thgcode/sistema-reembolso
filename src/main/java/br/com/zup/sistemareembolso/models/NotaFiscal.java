@@ -11,7 +11,7 @@ public class NotaFiscal {
     private int codigoDaNota;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private byte []imagem;
 
     @Column(nullable = false)
