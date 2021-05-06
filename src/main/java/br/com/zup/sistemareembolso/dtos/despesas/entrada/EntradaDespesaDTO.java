@@ -17,8 +17,6 @@ public class EntradaDespesaDTO {
     @Positive
     private double valor;
 
-    private Status status;
-
     private int projetoId;
 
     private Integer codCategoria;
@@ -39,11 +37,6 @@ public class EntradaDespesaDTO {
         return valor; }
     public void setValor(double valor) {
         this.valor = valor; }
-
-    public Status getStatus() {
-        return status; }
-    public void setStatus(Status status) {
-        this.status = status; }
 
     public int getProjetoId() {
         return projetoId;
@@ -75,7 +68,6 @@ public class EntradaDespesaDTO {
 
         despesa.setDescricao(this.descricao);
         despesa.setValor(this.valor);
-        despesa.setStatus(this.status);
 
         Categoria categoria = new Categoria();
         categoria.setCodCategoria(this.codCategoria);

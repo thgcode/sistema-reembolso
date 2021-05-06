@@ -21,7 +21,7 @@ public class DespesaService {
     private ProjetoService projetoService;
 
     public Despesa adicionarDespesa(Despesa despesa) {
-
+        despesa.setStatus(Status.ENVIADO_PARA_APROVACAO);
         despesa.setDataEntrada(LocalDate.now());
 
         /* Verificar se existe o colaborador */
@@ -91,7 +91,7 @@ public class DespesaService {
         Despesa despesaDoBanco = buscarDespesaPeloId(despesa.getId());
         Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
 
-        validarSePodeAprovarDespesa(despesaDoBanco, colaborador);
+        validarSePodeAprovarDespesa(despesaDoBanco, colaboradorDoBanco);
 
         despesaDoBanco.setDataAprovacao(LocalDate.now());
         despesa.setAprovador(colaboradorDoBanco);
