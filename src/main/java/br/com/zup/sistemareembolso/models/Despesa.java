@@ -30,6 +30,9 @@ public class Despesa {
     @ManyToOne
     private Categoria categoria;
 
+    @OneToOne(optional = false)
+    private NotaFiscal notaFiscal;
+
     public int getId() {
         return id;
     }
@@ -86,5 +89,13 @@ public class Despesa {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public NotaFiscal getNotaFiscal() {
+        return notaFiscal;
+    }
+
+    public void setNotaFiscal(NotaFiscal notaFiscal) {
+        this.notaFiscal = notaFiscal;
     }
 }
