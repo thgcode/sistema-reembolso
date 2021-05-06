@@ -8,6 +8,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface DespesaRepository extends CrudRepository<Despesa, Integer> {
     Iterable <Despesa> findAllByColaborador(Colaborador colaborador);
-    Iterable<Despesa> findAllByColaboradorDespesas(String cpf);
     Iterable <Despesa> findAllByProjetoAndStatus(Projeto projeto, Status status);
 }

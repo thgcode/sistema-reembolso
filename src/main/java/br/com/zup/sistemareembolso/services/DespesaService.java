@@ -20,10 +20,6 @@ public class DespesaService {
     @Autowired
     private ProjetoService projetoService;
 
-
-    @Autowired
-    private ProjetoService projetoService;
-
     public Despesa adicionarDespesa(Despesa despesa) {
 
         despesa.setDataEntrada(LocalDate.now());
