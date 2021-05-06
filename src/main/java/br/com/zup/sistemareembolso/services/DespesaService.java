@@ -68,7 +68,7 @@ public class DespesaService {
             objetoDespesa.setValor(despesa.getValor());
         }
 
-        if (!objetoDespesa.getCategoria().getDescricao().equals(despesa.getCategoria().getDescricao()) && despesa.getCategoria().getDescricao() != null){
+        if (despesa.getCategoria() != null && !objetoDespesa.getCategoria().getDescricao().equals(despesa.getCategoria().getDescricao()) && despesa.getCategoria().getDescricao() != null){
             objetoDespesa.setCategoria(despesa.getCategoria());
         }
 
