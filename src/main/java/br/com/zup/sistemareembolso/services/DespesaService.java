@@ -56,6 +56,25 @@ public class DespesaService {
         return despesaRepository.findAllByColaborador(colaborador);
     }
 
+    public Despesa atualizarDespesaParcial(Despesa despesa){
+
+        Despesa objetoDespesa = buscarDespesaPeloId(despesa.getId());
+
+        if (!objetoDespesa.getDescricao().equals(despesa.getDescricao()) && despesa.getDescricao() != null ){
+            objetoDespesa.setDescricao(despesa.getDescricao());
+        }
+
+        if (objetoDespesa.getValor() != despesa.getValor() && despesa.getValor() > 0.00){
+            objetoDespesa.setValor(despesa.getValor());
+        }
+
+        if (!objetoDespesa.getCategoria().getDescricao().equals(despesa.getCategoria().getDescricao()) && despesa.getCategoria().getDescricao() != null){
+            objetoDespesa.setCategoria(despesa.getCategoria());
+        }
+
+        return despesaRepository.save(objetoDespesa);
+    }
+
     public void validarSePodeAprovarDespesa(Despesa despesaDoBanco, Colaborador colaboradorDoBanco) {
         if (despesaDoBanco.getStatus() == Status.APROVADO) {
             throw new DespesaJaAprovadaException();
