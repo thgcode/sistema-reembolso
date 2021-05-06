@@ -35,6 +35,14 @@ public class Colaborador {
 
     public Colaborador() { }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -59,14 +67,6 @@ public class Colaborador {
         this.nomeCompleto = nomeCompleto;
     }
 
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
     public Cargo getCargo() {
         return cargo;
     }
@@ -75,12 +75,28 @@ public class Colaborador {
         this.cargo = cargo;
     }
 
+    public Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
+    }
+
     public String getBanco() {
         return banco;
     }
 
     public void setBanco(String banco) {
         this.banco = banco;
+    }
+
+    public String getNumeroDoBanco() {
+        return numeroDoBanco;
+    }
+
+    public void setNumeroDoBanco(String numeroDoBanco) {
+        this.numeroDoBanco = numeroDoBanco;
     }
 
     public String getAgencia() {
@@ -121,29 +137,5 @@ public class Colaborador {
 
     public void setTipoDaConta(TipoDaConta tipoDaConta) {
         this.tipoDaConta = tipoDaConta;
-    }
-
-    public String getNumeroDoBando() {
-        return numeroDoBanco;
-    }
-
-    public void setNumeroDoBando(String numeroDoBanco) {
-        this.numeroDoBanco = numeroDoBanco;
-    }
-
-    public Projeto getProjeto() {
-        return projeto;
-    }
-
-    public void setProjeto(Projeto projeto) {
-        this.projeto = projeto;
-    }
-
-    public String getNumeroDoBanco() {
-        return numeroDoBanco;
-    }
-
-    public void setNumeroDoBanco(String numeroDoBanco) {
-        this.numeroDoBanco = numeroDoBanco;
     }
 }
