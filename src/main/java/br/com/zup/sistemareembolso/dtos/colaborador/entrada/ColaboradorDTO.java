@@ -153,7 +153,7 @@ public class ColaboradorDTO {
         colaborador.setCpf(this.cpf);
         colaborador.setCargo(this.cargo);
         colaborador.setBanco(this.banco);
-        colaborador.setNumeroDoBando(this.numeroDoBanco);
+        colaborador.setNumeroDoBanco(this.numeroDoBanco);
         colaborador.setAgencia(this.agencia);
         colaborador.setDigitoDaAgencia(this.digitoDaAgencia);
         colaborador.setConta(this.conta);
