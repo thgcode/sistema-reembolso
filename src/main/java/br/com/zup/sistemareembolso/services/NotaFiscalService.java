@@ -2,6 +2,7 @@ package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.NotaFiscalForaDaValidadeException;
 import br.com.zup.sistemareembolso.exceptions.NotaFiscalNaoExistenteException;
+import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.models.NotaFiscal;
 import br.com.zup.sistemareembolso.repositories.NotaFiscalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import java.util.Optional;
 public class NotaFiscalService {
     @Autowired
     private NotaFiscalRepository notaFiscalRepository;
+
+    @Autowired
+    private DespesaService despesaService;
 
     private void validarNotaFiscal(NotaFiscal notaFiscal) {
         if (notaFiscal.getDataDeEmissao().isBefore(LocalDate.now().minusDays(30))) {
@@ -45,6 +49,17 @@ public class NotaFiscalService {
         NotaFiscal notaFiscal = pesquisarNotaFiscal(codigoDaNota);
 
         notaFiscalRepository.delete(notaFiscal);
+    }
+
+    public double calcularValorDaNotaPeloId(int codigoDaNota) {
+        double valor = 0;
+        NotaFiscal notaFiscal = pesquisarNotaFiscal(codigoDaNota);
+
+        for (Despesa despesa: despesaService.pesquisarDespesasPeloCodigoDaNotaFiscal(codigoDaNota)) {
+            valor += despesa.getValor();
+        }
+
+        return valor;
     }
 
 }
