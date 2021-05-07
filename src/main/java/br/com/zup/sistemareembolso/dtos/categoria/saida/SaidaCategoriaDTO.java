@@ -1,6 +1,5 @@
 package br.com.zup.sistemareembolso.dtos.categoria.saida;
 
-import br.com.zup.sistemareembolso.dtos.despesas.entrada.EntradaDespesaDTO;
 import br.com.zup.sistemareembolso.models.Categoria;
 
 public class SaidaCategoriaDTO {

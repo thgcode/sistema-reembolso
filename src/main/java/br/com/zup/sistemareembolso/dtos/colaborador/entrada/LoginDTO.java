@@ -1,6 +1,7 @@
 package br.com.zup.sistemareembolso.dtos.colaborador.entrada;
 
 public class LoginDTO {
+
     private String cpf;
     private String senha;
 

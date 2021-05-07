@@ -8,9 +8,9 @@ import javax.validation.constraints.Positive;
 
 public class AtualizaDespesaDTO {
 
-    @NotBlank
+
     private String descricao;
-    @Positive
+
     private double valor;
 
     private Categoria categoria;
