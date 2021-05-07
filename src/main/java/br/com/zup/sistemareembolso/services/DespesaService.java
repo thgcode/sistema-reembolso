@@ -80,6 +80,10 @@ public class DespesaService {
             throw new DespesaJaAprovadaException();
         }
 
+        if (despesaDoBanco.getStatus().equals(Status.REPROVADO)) {
+            throw new DespesaJaReprovadaException();
+        }
+
         if (colaboradorDoBanco.getCargo().equals(Cargo.OPERACIONAL)) {
             throw new ColaboradorNaoEAprovadorException();
         }
@@ -114,7 +118,7 @@ public class DespesaService {
 
         despesaDoBanco.setDataAprovacao(LocalDate.now());
         despesa.setAprovador(colaboradorDoBanco);
-        despesaDoBanco.setStatus(Status.NAO_APROVADO);
+        despesaDoBanco.setStatus(Status.REPROVADO);
 
         return despesaRepository.save(despesaDoBanco);
     }
