@@ -1,6 +1,5 @@
 package br.com.zup.sistemareembolso.services;
 
-import br.com.zup.sistemareembolso.dtos.notafiscal.entrada.NotaFiscalDTO;
 import br.com.zup.sistemareembolso.exceptions.*;
 import br.com.zup.sistemareembolso.models.*;
 import br.com.zup.sistemareembolso.repositories.DespesaRepository;
@@ -153,5 +152,9 @@ public class DespesaService {
 
         notaFiscalService.excluirNotaFiscalPeloCodigo(despesa.getNotaFiscal().getCodigoDaNota());
         despesaRepository.delete(despesa);
+    }
+
+    public Iterable <Despesa> pesquisarDespesasPeloCodigoDaNotaFiscal(int codigoDaNota) {
+        return despesaRepository.findAllByNotaFiscal_codigoDaNota(codigoDaNota);
     }
 }
