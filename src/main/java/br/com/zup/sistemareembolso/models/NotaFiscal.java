@@ -1,6 +1,7 @@
 package br.com.zup.sistemareembolso.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Table(name = "notas_fiscais")
@@ -10,9 +11,8 @@ public class NotaFiscal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigoDaNota;
 
-    @Lob
-    @Column(nullable = false, unique = true)
-    private byte []imagem;
+    @Column(nullable = false)
+    private String linkDaImagem;
 
     @Column(nullable = false)
     private LocalDate dataDeEmissao;
@@ -29,12 +29,12 @@ public class NotaFiscal {
         this.codigoDaNota = codigoDaNota;
     }
 
-    public byte[] getImagem() {
-        return imagem;
+    public String getLinkDaImagem() {
+        return linkDaImagem;
     }
 
-    public void setImagem(byte[] imagem) {
-        this.imagem = imagem;
+    public void setLinkDaImagem(String linkDaImagem) {
+        this.linkDaImagem = linkDaImagem;
     }
 
     public LocalDate getDataDeEmissao() {

@@ -2,6 +2,7 @@ package br.com.zup.sistemareembolso.models;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Table(name = "despesas")
 @Entity
@@ -30,8 +31,8 @@ public class Despesa {
     @ManyToOne
     private Categoria categoria;
 
-    @OneToOne(optional = false)
-    private NotaFiscal notaFiscal;
+    @OneToMany(optional = false)
+    private List <NotaFiscal> notaFiscal;
 
     public int getId() {
         return id;
