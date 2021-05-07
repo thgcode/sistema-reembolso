@@ -8,9 +8,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,5 +65,9 @@ public class ColaboradorService {
             colaborador.setDigitoDaConta(atualizarZupper.getDigitoDaConta());
         }
         return colaboradorRepository.save(colaborador);
+    }
+
+    public Iterable<Colaborador> pesquisarColaboradorPorProjeto(int idProjeto){
+        return colaboradorRepository.findAllByProjetoId(idProjeto);
     }
 }
