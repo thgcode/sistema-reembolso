@@ -30,7 +30,11 @@ public class ColaboradorController {
         return  colaboradorService.pesquisarColaboradorPorCpf(colaboradorDTO.getCpf());
     }
 
-    @DeleteMapping("{cpf}/")
+    @GetMapping("porProjeto/{id}/")
+    public Iterable<Colaborador> pesquisarColaboradorPorProjeto(@PathVariable int id) {
+        return colaboradorService.pesquisarColaboradorPorProjeto(id);
+    }
+        @DeleteMapping("{cpf}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteClientePeloCpf(@PathVariable String cpf){
         colaboradorService.excluirColaboradorPorCpf(cpf);
