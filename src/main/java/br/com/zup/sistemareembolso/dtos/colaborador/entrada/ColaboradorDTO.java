@@ -4,33 +4,46 @@ import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.models.TipoDaConta;
-;
+import org.hibernate.validator.constraints.br.CPF;
+;import javax.validation.constraints.*;
 
 public class ColaboradorDTO {
 
-    //@Email
+    @Email(message = "{validacao.email}")
     private String email;
-    //@NotBlank
+
+    @NotBlank(message = "{validacao.notblank}")
     private String senha;
-    //@NotBlank
+
+    @NotBlank(message = "{validacao.notblank}")
     private String nomeCompleto;
-    //@CPF
+
+    @CPF(message = "{validacao.cpf}")
     private String cpf;
-    //@NotBlank
+
+    @NotNull()
     private Cargo cargo;
-    //@NotBlank
+
+    @NotBlank(message = "{validacao.notblank}")
     private String banco;
-    //@NotBlank
+
+    @NotBlank(message = "{validacao.notblank}")
     private String numeroDoBanco;
-    //@NotBlank
+
+    @NotBlank(message = "{validacao.notblank}")
     private String agencia;
-    //@NotBlank
+
+    @Positive
     private int digitoDaAgencia;
-    //@NotBlank
+
+    @NotBlank(message = "{validacao.notblank}")
     private String conta;
-    //@NotBlank
+
+    @NotNull(message = "{validacao.notnull}")
+    @Positive
     private int digitoDaConta;
-    //@NotBlank
+
+    @NotNull()
     private TipoDaConta tipoDaConta;
 
     private int projetoId;

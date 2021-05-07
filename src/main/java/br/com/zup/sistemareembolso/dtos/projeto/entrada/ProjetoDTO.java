@@ -4,14 +4,17 @@ import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.models.Projeto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class ProjetoDTO {
-    @NotBlank
+
+    @NotBlank(message = "{validacao.notblank}")
     private String nomeDoProjeto;
 
-    @NotBlank
+    @NotBlank(message = "{validacao.notblank}")
     private String codigoDoProjeto;
 
+    @NotNull()
     private Integer localidade;
 
     public ProjetoDTO() { }

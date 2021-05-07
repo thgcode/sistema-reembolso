@@ -1,7 +1,6 @@
 package br.com.zup.sistemareembolso.dtos.colaborador.entrada;
 
 import br.com.zup.sistemareembolso.models.Colaborador;
-import br.com.zup.sistemareembolso.models.TipoDaConta;
 
 public class ColaboradorAtualizacaoParcialDTO {
 

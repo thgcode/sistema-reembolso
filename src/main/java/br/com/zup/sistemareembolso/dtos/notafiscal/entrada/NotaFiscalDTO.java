@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class NotaFiscalDTO {
+
     private int codigoDaNota;
 
     private String linkDaImagem;
