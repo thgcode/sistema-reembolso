@@ -43,6 +43,7 @@ public class ConfiguracaoBancoDeDados implements ApplicationRunner {
         if (!projetoRepository.existsByNomeDoProjeto("Catalisa")) {
             Projeto projeto = new Projeto();
             projeto.setNomeDoProjeto("Catalisa");
+            projeto.setCodigoDoProjeto("CT");
             projeto.setLocalidade(localidade);
             projeto.setVerba(50000);
             projetoRepository.save(projeto);
