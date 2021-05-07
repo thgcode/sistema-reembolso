@@ -150,6 +150,10 @@ public class DespesaService {
             throw new DespesaJaAprovadaException();
         }
 
+        if (despesa.getStatus().equals(Status.REPROVADO)) {
+            throw new DespesaJaReprovadaException();
+        }
+
         notaFiscalService.excluirNotaFiscalPeloCodigo(despesa.getNotaFiscal().getCodigoDaNota());
         despesaRepository.delete(despesa);
     }
