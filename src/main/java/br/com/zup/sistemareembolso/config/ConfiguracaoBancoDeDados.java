@@ -2,6 +2,7 @@ package br.com.zup.sistemareembolso.config;
 
 import br.com.zup.sistemareembolso.models.Categoria;
 import br.com.zup.sistemareembolso.models.Localidade;
+import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.repositories.CategoriaRepository;
 import br.com.zup.sistemareembolso.repositories.LocalidadeRepository;
 import br.com.zup.sistemareembolso.repositories.ProjetoRepository;
@@ -28,9 +29,23 @@ public class ConfiguracaoBancoDeDados implements ApplicationRunner {
             categoria.setDescricao("Eletrônicos");
             categoriaRepository.save(categoria);
         }
-        
-        Localidade localidade = new Localidade();
-        localidade.setNome("Uberlândia");
 
+        Localidade localidade;
+
+        if (!localidadeRepository.existsByNome("Uberlândia")) {
+            localidade = new Localidade();
+            localidade.setNome("Uberlândia");
+            localidadeRepository.save(localidade);
+        } else {
+            localidade = localidadeRepository.findByNome("Uberlândia").get();
+        }
+
+        if (!projetoRepository.existsByNomeDoProjeto("Catalisa")) {
+            Projeto projeto = new Projeto();
+            projeto.setNomeDoProjeto("Catalisa");
+            projeto.setLocalidade(localidade);
+            projeto.setVerba(50000);
+            projetoRepository.save(projeto);
+        }
     }
 }
