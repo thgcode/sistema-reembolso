@@ -135,4 +135,15 @@ public class DespesaService {
 
         return despesaRepository.findAllByProjetoAndStatus(projeto, status);
     }
+
+    public void excluirDespesaPeloCodigo(int codigoDespesa) {
+        Despesa despesa = buscarDespesaPeloId(codigoDespesa);
+
+        if (despesa.getStatus().equals(Status.APROVADO)) {
+            throw new DespesaJaAprovadaException();
+        }
+
+        notaFiscalService.excluirNotaFiscalPeloCodigo(despesa.getNotaFiscal().getCodigoDaNota());
+        despesaRepository.delete(despesa);
+    }
 }
