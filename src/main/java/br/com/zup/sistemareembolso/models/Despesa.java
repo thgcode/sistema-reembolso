@@ -31,8 +31,8 @@ public class Despesa {
     @ManyToOne
     private Categoria categoria;
 
-    @OneToMany(optional = false)
-    private List <NotaFiscal> notaFiscal;
+    @ManyToOne(optional = false)
+    private NotaFiscal notaFiscal;
 
     public int getId() {
         return id;

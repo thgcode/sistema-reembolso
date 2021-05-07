@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public class NotaFiscalDTO {
     @NotNull
-    private byte []imagem;
+    private String linkDaImagem;
 
     @NotNull
     private LocalDate dataDeEmissao;
@@ -16,12 +16,12 @@ public class NotaFiscalDTO {
 
     }
 
-    public byte[] getImagem() {
-        return imagem;
+    public String getLinkDaImagem() {
+        return linkDaImagem;
     }
 
-    public void setImagem(byte[] imagem) {
-        this.imagem = imagem;
+    public void setLinkDaImagem(String linkDaImagem) {
+        this.linkDaImagem = linkDaImagem;
     }
 
     public LocalDate getDataDeEmissao() {
@@ -35,7 +35,7 @@ public class NotaFiscalDTO {
     public NotaFiscal converterDTOParaNotaFiscal() {
         NotaFiscal notaFiscal = new NotaFiscal();
 
-        notaFiscal.setImagem(imagem);
+        notaFiscal.setLinkDaImagem(linkDaImagem);
         notaFiscal.setDataDeEmissao(dataDeEmissao);
 
         return notaFiscal;
