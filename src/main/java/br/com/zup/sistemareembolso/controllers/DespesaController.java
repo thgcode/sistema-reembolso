@@ -82,5 +82,9 @@ public class DespesaController {
         return despesaService.desaprovarDespesa(despesa, colaborador);
     }
 
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluirDespesa(@PathVariable int codigoDespesa) {
+        despesaService.excluirDespesaPeloCodigo(codigoDespesa);
+    }
 }
-

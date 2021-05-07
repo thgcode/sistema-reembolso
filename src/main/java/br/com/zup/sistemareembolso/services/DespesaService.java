@@ -17,6 +17,10 @@ public class DespesaService {
 
     @Autowired
     private ColaboradorService colaboradorService;
+
+    @Autowired
+    private NotaFiscalService notaFiscalService;
+
     @Autowired
     private ProjetoService projetoService;
 
@@ -30,6 +34,16 @@ public class DespesaService {
 
         Projeto projeto = projetoService.pesquisarProjetoPeloId(despesa.getProjeto().getId());
         despesa.setProjeto(projeto);
+
+        NotaFiscal notaDoBanco;
+
+        if (despesa.getNotaFiscal().getCodigoDaNota() > 0) {
+            notaDoBanco = notaFiscalService.pesquisarNotaFiscal(despesa.getNotaFiscal().getCodigoDaNota());
+        } else {
+            notaDoBanco = notaFiscalService.adicionarNotaFiscal(despesa.getNotaFiscal());
+        }
+
+        despesa.setNotaFiscal(notaDoBanco);
 
         return despesaRepository.save(despesa);
     }
@@ -127,5 +141,20 @@ public class DespesaService {
         Projeto projeto = projetoService.pesquisarProjetoPeloId(codProjeto);
 
         return despesaRepository.findAllByProjetoAndStatus(projeto, status);
+    }
+
+    public void excluirDespesaPeloCodigo(int codigoDespesa) {
+        Despesa despesa = buscarDespesaPeloId(codigoDespesa);
+
+        if (despesa.getStatus().equals(Status.APROVADO)) {
+            throw new DespesaJaAprovadaException();
+        }
+
+        notaFiscalService.excluirNotaFiscalPeloCodigo(despesa.getNotaFiscal().getCodigoDaNota());
+        despesaRepository.delete(despesa);
+    }
+
+    public Iterable <Despesa> pesquisarDespesasPeloCodigoDaNotaFiscal(int codigoDaNota) {
+        return despesaRepository.findAllByNotaFiscal_codigoDaNota(codigoDaNota);
     }
 }

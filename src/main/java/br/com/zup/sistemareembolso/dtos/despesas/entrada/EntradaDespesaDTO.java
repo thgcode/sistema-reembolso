@@ -1,13 +1,14 @@
 package br.com.zup.sistemareembolso.dtos.despesas.entrada;
 
+import br.com.zup.sistemareembolso.dtos.notafiscal.entrada.NotaFiscalDTO;
 import br.com.zup.sistemareembolso.models.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class EntradaDespesaDTO {
-
     @CPF
     private String cpf;
 
@@ -17,9 +18,14 @@ public class EntradaDespesaDTO {
     @Positive
     private double valor;
 
+    @Positive
     private int projetoId;
 
+    @Positive
     private Integer codCategoria;
+
+    @NotNull
+    private NotaFiscalDTO notaFiscal;
 
     public EntradaDespesaDTO() {}
 
@@ -54,6 +60,14 @@ public class EntradaDespesaDTO {
         this.codCategoria = codCategoria;
     }
 
+    public NotaFiscalDTO getNotaFiscal() {
+        return notaFiscal;
+    }
+
+    public void setNotaFiscal(NotaFiscalDTO notaFiscal) {
+        this.notaFiscal = notaFiscal;
+    }
+
     public Despesa converterDTOparaDespesas(){
         Despesa despesa = new Despesa();
 
@@ -73,6 +87,7 @@ public class EntradaDespesaDTO {
         categoria.setCodCategoria(this.codCategoria);
 
         despesa.setCategoria(categoria);
+        despesa.setNotaFiscal(notaFiscal.converterDTOParaNotaFiscal());
 
         return despesa;
     }
