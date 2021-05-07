@@ -87,4 +87,12 @@ public class DespesaController {
     public void excluirDespesa(@PathVariable int codigoDespesa) {
         despesaService.excluirDespesaPeloCodigo(codigoDespesa);
     }
+
+    @GetMapping("porColaborador/{cpf}/")
+    public Iterable <Despesa> pesquisarDespesasPorUmColaborador(@PathVariable String cpf) {
+        Colaborador colaborador = new Colaborador();
+        colaborador.setCpf(cpf);
+
+        return despesaService.pesquisarDespesasPorColaborador(colaborador);
+    }
 }
