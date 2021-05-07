@@ -1,5 +1,6 @@
 package br.com.zup.sistemareembolso.services;
 
+import br.com.zup.sistemareembolso.dtos.notafiscal.entrada.NotaFiscalDTO;
 import br.com.zup.sistemareembolso.exceptions.*;
 import br.com.zup.sistemareembolso.models.*;
 import br.com.zup.sistemareembolso.repositories.DespesaRepository;
@@ -35,7 +36,14 @@ public class DespesaService {
         Projeto projeto = projetoService.pesquisarProjetoPeloId(despesa.getProjeto().getId());
         despesa.setProjeto(projeto);
 
-        NotaFiscal notaDoBanco = notaFiscalService.adicionarNotaFiscal(despesa.getNotaFiscal());
+        NotaFiscal notaDoBanco;
+
+        if (despesa.getNotaFiscal().getCodigoDaNota() > 0) {
+            notaDoBanco = notaFiscalService.pesquisarNotaFiscal(despesa.getNotaFiscal().getCodigoDaNota());
+        } else {
+            notaDoBanco = notaFiscalService.adicionarNotaFiscal(despesa.getNotaFiscal());
+        }
+
         despesa.setNotaFiscal(notaDoBanco);
 
         return despesaRepository.save(despesa);

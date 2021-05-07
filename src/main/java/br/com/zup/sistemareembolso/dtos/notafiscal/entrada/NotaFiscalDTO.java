@@ -6,14 +6,22 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class NotaFiscalDTO {
-    @NotNull
+    private int codigoDaNota;
+
     private String linkDaImagem;
 
-    @NotNull
     private LocalDate dataDeEmissao;
 
     public NotaFiscalDTO() {
 
+    }
+
+    public int getCodigoDaNota() {
+        return codigoDaNota;
+    }
+
+    public void setCodigoDaNota(int codigoDaNota) {
+        this.codigoDaNota = codigoDaNota;
     }
 
     public String getLinkDaImagem() {
