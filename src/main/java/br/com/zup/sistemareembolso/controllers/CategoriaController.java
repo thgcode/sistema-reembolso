@@ -2,11 +2,7 @@ package br.com.zup.sistemareembolso.controllers;
 
 import br.com.zup.sistemareembolso.dtos.categoria.entrada.EntradaCategoriaDTO;
 import br.com.zup.sistemareembolso.dtos.categoria.saida.SaidaCategoriaDTO;
-import br.com.zup.sistemareembolso.dtos.colaborador.entrada.ColaboradorDTO;
-import br.com.zup.sistemareembolso.dtos.despesas.saida.SaidaDespesaDTO;
 import br.com.zup.sistemareembolso.models.Categoria;
-import br.com.zup.sistemareembolso.models.Colaborador;
-import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
