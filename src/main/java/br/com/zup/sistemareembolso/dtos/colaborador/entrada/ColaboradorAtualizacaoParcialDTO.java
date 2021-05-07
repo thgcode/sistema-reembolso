@@ -1,41 +1,20 @@
 package br.com.zup.sistemareembolso.dtos.colaborador.entrada;
 
-import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
-import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.models.TipoDaConta;
-;
 
-public class ColaboradorDTO {
+public class ColaboradorAtualizacaoParcialDTO {
 
-    //@Email
     private String email;
-    //@NotBlank
     private String senha;
-    //@NotBlank
-    private String nomeCompleto;
-    //@CPF
-    private String cpf;
-    //@NotBlank
-    private Cargo cargo;
-    //@NotBlank
     private String banco;
-    //@NotBlank
     private String numeroDoBanco;
-    //@NotBlank
     private String agencia;
-    //@NotBlank
     private int digitoDaAgencia;
-    //@NotBlank
     private String conta;
-    //@NotBlank
     private int digitoDaConta;
-    //@NotBlank
-    private TipoDaConta tipoDaConta;
 
-    private int projetoId;
-
-    public ColaboradorDTO() {
+    public ColaboradorAtualizacaoParcialDTO() {
     }
 
     public String getEmail() {
@@ -52,30 +31,6 @@ public class ColaboradorDTO {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public String getNomeCompleto() {
-        return nomeCompleto;
-    }
-
-    public void setNomeCompleto(String nomeCompleto) {
-        this.nomeCompleto = nomeCompleto;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public Cargo getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
     }
 
     public String getBanco() {
@@ -126,43 +81,17 @@ public class ColaboradorDTO {
         this.digitoDaConta = digitoDaConta;
     }
 
-    public TipoDaConta getTipoDaConta() {
-        return tipoDaConta;
-    }
-
-    public void setTipoDaConta(TipoDaConta tipoDaConta) {
-        this.tipoDaConta = tipoDaConta;
-    }
-
-    public int getProjetoId() {
-        return projetoId;
-    }
-
-    public void setProjetoId(int projetoId) {
-        this.projetoId = projetoId;
-    }
-
-    public Colaborador converterDTOparaColaborador(){
-
+    public Colaborador converterDTOParaColaborador(String cpf){
         Colaborador colaborador = new Colaborador();
+        colaborador.setCpf(cpf);
         colaborador.setEmail(this.email);
         colaborador.setSenha(this.senha);
-        colaborador.setNomeCompleto(this.nomeCompleto);
-        colaborador.setCpf(this.cpf);
-        colaborador.setCargo(this.cargo);
         colaborador.setBanco(this.banco);
         colaborador.setNumeroDoBanco(this.numeroDoBanco);
         colaborador.setAgencia(this.agencia);
         colaborador.setDigitoDaAgencia(this.digitoDaAgencia);
         colaborador.setConta(this.conta);
         colaborador.setDigitoDaConta(this.digitoDaConta);
-        colaborador.setTipoDaConta(this.tipoDaConta);
-
-        Projeto projeto = new Projeto();
-        projeto.setId(projetoId);
-
-        colaborador.setProjeto(projeto);
-
         return colaborador;
     }
 }
