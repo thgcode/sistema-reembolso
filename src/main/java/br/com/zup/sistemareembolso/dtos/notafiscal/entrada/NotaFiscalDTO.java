@@ -43,6 +43,7 @@ public class NotaFiscalDTO {
     public NotaFiscal converterDTOParaNotaFiscal() {
         NotaFiscal notaFiscal = new NotaFiscal();
 
+        notaFiscal.setCodigoDaNota(codigoDaNota);
         notaFiscal.setLinkDaImagem(linkDaImagem);
         notaFiscal.setDataDeEmissao(dataDeEmissao);
 

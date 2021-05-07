@@ -4,13 +4,13 @@ import br.com.zup.sistemareembolso.models.NotaFiscal;
 
 import java.time.LocalDate;
 
-public class NotaFiscalDTO {
+public class NotaFiscalSaidaDTO {
     private int codigoDaNota;
     private String linkDaImagem;
     private LocalDate dataDaEmissao;
     private double valor;
 
-    public NotaFiscalDTO() {
+    public NotaFiscalSaidaDTO() {
     }
 
     public int getCodigoDaNota() {
@@ -45,12 +45,12 @@ public class NotaFiscalDTO {
         this.valor = valor;
     }
 
-    public static NotaFiscalDTO converterDTODeNotaFiscalEValor(NotaFiscal notaFiscal, double valor) {
-        NotaFiscalDTO dto = new NotaFiscalDTO();
-        
+    public static NotaFiscalSaidaDTO converterDTODeNotaFiscalEValor(NotaFiscal notaFiscal, double valor) {
+        NotaFiscalSaidaDTO dto = new NotaFiscalSaidaDTO();
+
         dto.setCodigoDaNota(notaFiscal.getCodigoDaNota());
         dto.setLinkDaImagem(notaFiscal.getLinkDaImagem());
-        dto.setDataDaEmissao(dto.getDataDaEmissao());
+        dto.setDataDaEmissao(notaFiscal.getDataDeEmissao());
         dto.setValor(valor);
 
         return dto;
