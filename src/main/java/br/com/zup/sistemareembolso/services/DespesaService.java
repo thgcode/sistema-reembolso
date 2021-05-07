@@ -33,6 +33,11 @@ public class DespesaService {
         despesa.setColaborador(colaborador);
 
         Projeto projeto = projetoService.pesquisarProjetoPeloId(despesa.getProjeto().getId());
+
+        if (colaborador.getProjeto().getId() != colaborador.getProjeto().getId()) {
+            throw new ColaboradorNaoEstaNoProjetoException();
+        }
+
         despesa.setProjeto(projeto);
 
         NotaFiscal notaDoBanco;
