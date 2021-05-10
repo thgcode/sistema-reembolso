@@ -1,23 +1,87 @@
 package br.com.zup.sistemareembolso.services;
 
+import br.com.zup.sistemareembolso.config.ConfiguracaoDaImagemDaNotaFiscal;
 import br.com.zup.sistemareembolso.exceptions.NotaFiscalForaDaValidadeException;
 import br.com.zup.sistemareembolso.exceptions.NotaFiscalNaoExistenteException;
 import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.models.NotaFiscal;
 import br.com.zup.sistemareembolso.repositories.NotaFiscalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
 public class NotaFiscalService {
-    @Autowired
     private NotaFiscalRepository notaFiscalRepository;
 
-    @Autowired
     private DespesaService despesaService;
+
+    private ConfiguracaoDaImagemDaNotaFiscal configuracaoDaImagemDaNotaFiscal;
+
+    private Path localDasImagensDasNotas;
+
+    @Autowired
+    public NotaFiscalService(NotaFiscalRepository notaFiscalRepository, DespesaService despesaService, ConfiguracaoDaImagemDaNotaFiscal configuracaoDaImagemDaNotaFiscal) {
+        this.notaFiscalRepository = notaFiscalRepository;
+        this.despesaService = despesaService;
+        this.configuracaoDaImagemDaNotaFiscal = configuracaoDaImagemDaNotaFiscal;
+
+        localDasImagensDasNotas = Paths.get(configuracaoDaImagemDaNotaFiscal.getDiretorioParaUpload()).toAbsolutePath().normalize();
+
+        try {
+            Files.createDirectories(localDasImagensDasNotas);
+        } catch (Exception ex) {
+            throw new RuntimeException(
+                    "Não foi possível criar o diretório em que os arquivos enviados serão armazenados.", ex);
+        }
+    }
+
+    public String armazenarImagem(MultipartFile file) {
+        String nomeDoArquivo = StringUtils.cleanPath(file.getOriginalFilename());
+
+        try {
+            if (nomeDoArquivo.contains("..") || nomeDoArquivo.contains("/")) {
+                throw new RuntimeException(
+                        "Desculpe! Nome do arquivo contém sequência de caminho inválida" + nomeDoArquivo);
+            }
+
+            // Copia o arquivo para o local de destino (Substituindo arquivo existente pelo
+            // mesmo nome)
+            Path local = localDasImagensDasNotas.resolve(nomeDoArquivo);
+            Files.copy(file.getInputStream(), local, StandardCopyOption.REPLACE_EXISTING);
+
+            return nomeDoArquivo;
+        } catch (IOException ex) {
+            throw new RuntimeException(
+                    "Não foi possivel armazenar o arquivo " + nomeDoArquivo + ". Por favor tente novamente!", ex);
+        }
+    }
+
+    public Resource carregarImagem(String nomeDoArquivo) {
+        try {
+            Path caminhoDaImagem = localDasImagensDasNotas.resolve(nomeDoArquivo).normalize();
+            Resource resource = new UrlResource(caminhoDaImagem.toUri());
+            if (resource.exists()) {
+                return resource;
+            } else {
+                throw new RuntimeException("Arquivo não encontrado " + nomeDoArquivo);
+            }
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("Arquivo não encontrado " + nomeDoArquivo, ex);
+        }
+    }
 
     private void validarNotaFiscal(NotaFiscal notaFiscal) {
         if (notaFiscal.getDataDeEmissao().isBefore(LocalDate.now().minusDays(30))) {
