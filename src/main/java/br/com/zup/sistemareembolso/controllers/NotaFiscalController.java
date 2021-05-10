@@ -1,5 +1,6 @@
 package br.com.zup.sistemareembolso.controllers;
 
+import br.com.zup.sistemareembolso.dtos.notafiscal.entrada.ImagemDTO;
 import br.com.zup.sistemareembolso.dtos.notafiscal.saida.NotaFiscalSaidaDTO;
 import br.com.zup.sistemareembolso.models.NotaFiscal;
 import br.com.zup.sistemareembolso.services.NotaFiscalService;
@@ -8,10 +9,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -39,6 +39,16 @@ public class NotaFiscalController {
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(tipoDoArquivo))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+    @PostMapping("imagem/")
+    public ImagemDTO subirImagem(@RequestParam("arquivo") MultipartFile arquivo) {
+        String nomeDoArquivo = notaFiscalService.armazenarImagem(arquivo);
+
+        String linkDeDownload = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFile/")
+                .path(nomeDoArquivo).toUriString();
+
+        return new ImagemDTO(nomeDoArquivo, linkDeDownload, arquivo.getContentType(), arquivo.getSize());
     }
 
     @GetMapping("{codigoDaNota}/")

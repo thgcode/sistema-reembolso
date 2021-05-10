@@ -48,7 +48,7 @@ public class NotaFiscalService {
         }
     }
 
-    public String armazenaImagem(MultipartFile file) {
+    public String armazenarImagem(MultipartFile file) {
         String nomeDoArquivo = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {
