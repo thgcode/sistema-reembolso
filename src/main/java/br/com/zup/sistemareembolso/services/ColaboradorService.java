@@ -1,6 +1,7 @@
 package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoExistenteException;
+import br.com.zup.sistemareembolso.exceptions.ColaboradorRepetidoException;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.TipoDaConta;
 import br.com.zup.sistemareembolso.repositories.ColaboradorRepository;
@@ -19,9 +20,14 @@ public class ColaboradorService {
     private ColaboradorRepository colaboradorRepository;
 
     public Colaborador adicionarColaborador(Colaborador colaborador) {
+        try {
+            pesquisarColaboradorPorCpf(colaborador.getCpf());
+            throw new ColaboradorRepetidoException();
+        } catch (ColaboradorNaoExistenteException exception) {
         String senhaEncoder = encoder.encode(colaborador.getSenha());
         colaborador.setSenha(senhaEncoder);
         return colaboradorRepository.save(colaborador);
+        }
     }
 
     public Iterable <Colaborador> listarColaboradores() {
