@@ -1,7 +1,9 @@
 package br.com.zup.sistemareembolso.controllers;
 
+import br.com.zup.sistemareembolso.dtos.categoria.saida.SaidaCategoriaDTO;
 import br.com.zup.sistemareembolso.dtos.colaborador.entrada.AtualizaColaboradorDTO;
 import br.com.zup.sistemareembolso.dtos.colaborador.entrada.EntradaColaboradorDTO;
+import br.com.zup.sistemareembolso.dtos.colaborador.saida.SaidaColaboradorDTO;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.services.ColaboradorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,12 @@ public class ColaboradorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Colaborador adicionarColaborador(@RequestBody @Valid EntradaColaboradorDTO dto) {
-        return colaboradorService.adicionarColaborador(dto.converterDTOparaColaborador());
+    public SaidaColaboradorDTO adicionarColaborador(@RequestBody @Valid EntradaColaboradorDTO entradaColaboradorDTO) {
+        Colaborador colaborador = entradaColaboradorDTO.converterDTOparaColaborador();
+        Colaborador objetoColaborador = colaboradorService.adicionarColaborador(colaborador);
+
+        return SaidaColaboradorDTO.converterColaboradorParaDTO(objetoColaborador);
+
     }
 
     @GetMapping("{cpf}/")
