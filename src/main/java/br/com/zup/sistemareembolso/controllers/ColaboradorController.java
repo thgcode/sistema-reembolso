@@ -1,7 +1,7 @@
 package br.com.zup.sistemareembolso.controllers;
 
-import br.com.zup.sistemareembolso.dtos.colaborador.entrada.ColaboradorAtualizacaoParcialDTO;
-import br.com.zup.sistemareembolso.dtos.colaborador.entrada.ColaboradorDTO;
+import br.com.zup.sistemareembolso.dtos.colaborador.entrada.AtualizaColaboradorDTO;
+import br.com.zup.sistemareembolso.dtos.colaborador.entrada.EntradaColaboradorDTO;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.services.ColaboradorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +19,13 @@ public class ColaboradorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Colaborador adicionarColaborador(@RequestBody @Valid ColaboradorDTO dto) {
+    public Colaborador adicionarColaborador(@RequestBody @Valid EntradaColaboradorDTO dto) {
         return colaboradorService.adicionarColaborador(dto.converterDTOparaColaborador());
     }
 
     @GetMapping("{cpf}/")
     @ResponseStatus(HttpStatus.OK)
-    public Colaborador pesquisarPeloCpf(@PathVariable ColaboradorDTO colaboradorDTO){
+    public Colaborador pesquisarPeloCpf(@PathVariable EntradaColaboradorDTO colaboradorDTO){
         Colaborador colaborador = colaboradorDTO.converterDTOparaColaborador();
         return  colaboradorService.pesquisarColaboradorPorCpf(colaboradorDTO.getCpf());
     }
@@ -41,7 +41,7 @@ public class ColaboradorController {
     }
 
     @PatchMapping("{cpf}/")
-    public Colaborador atualizarColaboradorParcial(@PathVariable String cpf, @RequestBody @Valid ColaboradorAtualizacaoParcialDTO atualizacaoParcialDTO){
+    public Colaborador atualizarColaboradorParcial(@PathVariable String cpf, @RequestBody @Valid AtualizaColaboradorDTO atualizacaoParcialDTO){
         Colaborador colaborador = atualizacaoParcialDTO.converterDTOParaColaborador(cpf);
         return colaboradorService.atualizarColaborador(colaborador);
     }

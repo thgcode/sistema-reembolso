@@ -2,7 +2,7 @@ package br.com.zup.sistemareembolso.dtos.colaborador.entrada;
 
 import br.com.zup.sistemareembolso.models.Colaborador;
 
-public class ColaboradorAtualizacaoParcialDTO {
+public class AtualizaColaboradorDTO {
 
     private String email;
     private String senha;
@@ -13,7 +13,7 @@ public class ColaboradorAtualizacaoParcialDTO {
     private String conta;
     private int digitoDaConta;
 
-    public ColaboradorAtualizacaoParcialDTO() {
+    public AtualizaColaboradorDTO() {
     }
 
     public String getEmail() {
