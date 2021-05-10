@@ -1,6 +1,8 @@
 package br.com.zup.sistemareembolso.services;
 
+import br.com.zup.sistemareembolso.exceptions.DoisProjetosTemOMesmoCodigoException;
 import br.com.zup.sistemareembolso.exceptions.ProjetoNaoExistenteException;
+import br.com.zup.sistemareembolso.exceptions.ProjetoRepetidoException;
 import br.com.zup.sistemareembolso.exceptions.VerbaDoProjetoInsuficienteException;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.models.Projeto;
@@ -18,10 +20,24 @@ public class ProjetoService {
     @Autowired
     private LocalidadeService localidadeService;
 
+    private Projeto validarProjeto(Projeto projeto) {
+        try {
+            Projeto projetoDoBanco = pesquisarProjetoPeloNome(projeto.getNomeDoProjeto());
+            throw new ProjetoRepetidoException();
+        } catch (ProjetoNaoExistenteException exception) {
+            Projeto projetoDoBanco = pesquisarProjetoPeloCodigo(projeto.getCodigoDoProjeto());
+            throw new DoisProjetosTemOMesmoCodigoException();
+        }
+    }
+
     public Projeto adicionarProjeto(Projeto projeto) {
-        Localidade localidade = localidadeService.pesquisarLocalidadePeloCodigo(projeto.getLocalidade().getCodLocalidade());
-        projeto.setLocalidade(localidade);
-        return projetoRepository.save(projeto);
+        try {
+            return validarProjeto(projeto); // Não deve chegar aqui
+        } catch (ProjetoNaoExistenteException exception) {
+            Localidade localidade = localidadeService.pesquisarLocalidadePeloCodigo(projeto.getLocalidade().getCodLocalidade());
+            projeto.setLocalidade(localidade);
+            return projetoRepository.save(projeto);
+        }
     }
 
     public Iterable <Projeto> listarProjetos() {
@@ -38,6 +54,16 @@ public class ProjetoService {
         throw new ProjetoNaoExistenteException();
     }
 
+    public Projeto pesquisarProjetoPeloNome(String nome) {
+        Optional <Projeto> optionalProjeto = projetoRepository.findByNomeDoProjeto(nome);
+
+
+        if (optionalProjeto.isPresent()) {
+            return optionalProjeto.get();
+        }
+
+        throw new ProjetoNaoExistenteException();
+    }
     public void excluirProjetoPeloId(int id) {
         Projeto projeto = pesquisarProjetoPeloId(id);
 
@@ -58,5 +84,15 @@ public class ProjetoService {
         projeto.setVerba(projeto.getVerba() - valor);
 
         return projetoRepository.save(projeto);
+    }
+
+    public Projeto pesquisarProjetoPeloCodigo(String codigoDoProjeto) {
+        Optional <Projeto> optionalProjeto = projetoRepository.findByCodigoDoProjeto(codigoDoProjeto);
+
+        if (optionalProjeto.isPresent()) {
+            return optionalProjeto.get();
+        }
+
+        throw new ProjetoNaoExistenteException();
     }
 }
