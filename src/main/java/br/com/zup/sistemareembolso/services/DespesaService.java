@@ -118,7 +118,7 @@ public class DespesaService {
 
         validarSePodeAprovarDespesa(despesaDoBanco, colaboradorDoBanco);
 
-        projetoService.descontarValorDaDespesa(despesa.getProjeto().getId(), despesa.getValor());
+        projetoService.descontarValorDaDespesa(despesaDoBanco.getProjeto().getId(), despesaDoBanco  .getValor());
         despesaDoBanco.setDataAprovacao(LocalDate.now());
         despesaDoBanco.setAprovador(colaboradorDoBanco);
         despesaDoBanco.setStatus(Status.APROVADO);
