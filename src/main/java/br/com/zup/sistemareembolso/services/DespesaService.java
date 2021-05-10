@@ -118,10 +118,7 @@ public class DespesaService {
 
         validarSePodeAprovarDespesa(despesaDoBanco, colaboradorDoBanco);
 
-        if (despesaDoBanco.getProjeto().getVerba() > despesaDoBanco.getValor()) {
-            throw new VerbaDoProjetoInsuficienteException();
-        }
-
+        projetoService.descontarValorDaDespesa(despesaDoBanco.getProjeto().getId(), despesaDoBanco  .getValor());
         despesaDoBanco.setDataAprovacao(LocalDate.now());
         despesaDoBanco.setAprovador(colaboradorDoBanco);
         despesaDoBanco.setStatus(Status.APROVADO);

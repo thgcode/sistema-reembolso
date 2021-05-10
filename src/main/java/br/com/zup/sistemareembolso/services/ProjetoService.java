@@ -1,6 +1,7 @@
 package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.ProjetoNaoExistenteException;
+import br.com.zup.sistemareembolso.exceptions.VerbaDoProjetoInsuficienteException;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.repositories.ProjetoRepository;
@@ -41,5 +42,21 @@ public class ProjetoService {
         Projeto projeto = pesquisarProjetoPeloId(id);
 
         projetoRepository.delete(projeto);
+    }
+
+    private void validarVerbaDoProjeto(Projeto projeto, double valor) {
+        if (projeto.getVerba() < valor) {
+            throw new VerbaDoProjetoInsuficienteException();
+        }
+    }
+
+    public Projeto descontarValorDaDespesa(int codProjeto, double valor) {
+        Projeto projeto =  pesquisarProjetoPeloId(codProjeto);
+
+        validarVerbaDoProjeto(projeto, valor);
+
+        projeto.setVerba(projeto.getVerba() - valor);
+
+        return projetoRepository.save(projeto);
     }
 }
