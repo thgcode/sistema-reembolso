@@ -27,7 +27,7 @@ public class CategoriaController {
 
     @GetMapping
     public Iterable <Categoria> listarTodasCategorias() {
-        return categoriaService.pesquisandoTodasCategorias();
+        return categoriaService.listarCategorias();
     }
 
     @GetMapping("{codCategoria}/")

@@ -1,5 +1,7 @@
 package br.com.zup.sistemareembolso.services;
 
+import br.com.zup.sistemareembolso.exceptions.CategoriaNaoExistenteException;
+import br.com.zup.sistemareembolso.exceptions.CategoriaRepetidaException;
 import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoExistenteException;
 import br.com.zup.sistemareembolso.models.Categoria;
 import br.com.zup.sistemareembolso.repositories.CategoriaRepository;
@@ -15,16 +17,25 @@ public class CategoriaService {
     private CategoriaRepository categoriaRepository;
 
     public  Categoria  salvarCategoria ( Categoria  categoria ) {
+        if (categoriaRepository.existsByDescricao(categoria.getDescricao())) {
+            throw new CategoriaRepetidaException();
+        }
+
         return categoriaRepository.save(categoria);
     }
 
-    public  Iterable <Categoria> pesquisandoTodasCategorias () {
+    public Iterable <Categoria> listarCategorias() {
         return categoriaRepository.findAll();
     }
 
-    public Categoria pesquisarCategoriaPorCodCategoria(Integer codCategoria){
+    public Categoria pesquisarCategoriaPorCodCategoria(Integer codCategoria) {
         Optional<Categoria> optionalCategoria = categoriaRepository.findById(codCategoria);
-        return optionalCategoria.orElseThrow(() -> new ColaboradorNaoExistenteException() );
+
+        if (optionalCategoria.isPresent()) {
+            return optionalCategoria.get();
+        }
+
+        throw new CategoriaNaoExistenteException();
     }
 
     public  void  deletarCategoria(Integer codCategoria) {
