@@ -1,6 +1,6 @@
 package br.com.zup.sistemareembolso.controllers;
 
-import br.com.zup.sistemareembolso.dtos.localidade.entrada.LocalidadeDTO;
+import br.com.zup.sistemareembolso.dtos.localidade.entrada.EntradaLocalidadeDTO;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.services.LocalidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class LocalidadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Localidade adicionarLocalidade(@RequestBody @Valid LocalidadeDTO dto) {
+    public Localidade adicionarLocalidade(@RequestBody @Valid EntradaLocalidadeDTO dto) {
         return localidadeService.adicionarLocalidade(dto.converterDTOParaLocalidade());
     }
 
