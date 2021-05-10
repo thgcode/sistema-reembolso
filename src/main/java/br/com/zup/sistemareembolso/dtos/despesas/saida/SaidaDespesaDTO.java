@@ -1,19 +1,19 @@
 package br.com.zup.sistemareembolso.dtos.despesas.saida;
 
-import br.com.zup.sistemareembolso.models.Colaborador;
+import br.com.zup.sistemareembolso.dtos.colaborador.saida.SaidaColaboradorDTO;
 import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.models.Status;
 
 public class SaidaDespesaDTO {
-    private Colaborador colaborador;
+    private SaidaColaboradorDTO colaborador;
     private String descricao;
     private double valor;
     private Status status;
 
     public SaidaDespesaDTO() {}
 
-    public Colaborador getColaborador() { return colaborador; }
-    public void setColaborador(Colaborador colaborador) { this.colaborador = colaborador; }
+    public SaidaColaboradorDTO getColaborador() { return colaborador; }
+    public void setColaborador(SaidaColaboradorDTO colaborador) { this.colaborador = colaborador; }
 
     public String getDescricao() { return descricao; }
     public void setDescricao(String descricao) { this.descricao = descricao; }
@@ -27,7 +27,7 @@ public class SaidaDespesaDTO {
     public static SaidaDespesaDTO converterDespesaParaDTO(Despesa despesa){
         SaidaDespesaDTO saidaDespesaDTO = new SaidaDespesaDTO();
 
-        saidaDespesaDTO.setColaborador(despesa.getColaborador());
+        saidaDespesaDTO.setColaborador(SaidaColaboradorDTO.converterColaboradorParaDTO(despesa.getColaborador()));
         saidaDespesaDTO.setDescricao(despesa.getDescricao());
         saidaDespesaDTO.setValor(despesa.getValor());
         saidaDespesaDTO.setStatus(despesa.getStatus());
