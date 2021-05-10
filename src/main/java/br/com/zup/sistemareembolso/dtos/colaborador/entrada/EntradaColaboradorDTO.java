@@ -7,7 +7,7 @@ import br.com.zup.sistemareembolso.models.TipoDaConta;
 import org.hibernate.validator.constraints.br.CPF;
 ;import javax.validation.constraints.*;
 
-public class ColaboradorDTO {
+public class EntradaColaboradorDTO {
 
     @Email(message = "{validacao.email}")
     private String email;
@@ -48,7 +48,7 @@ public class ColaboradorDTO {
 
     private int projetoId;
 
-    public ColaboradorDTO() {
+    public EntradaColaboradorDTO() {
     }
 
     public String getEmail() {
