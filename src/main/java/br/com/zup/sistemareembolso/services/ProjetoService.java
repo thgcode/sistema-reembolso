@@ -57,13 +57,13 @@ public class ProjetoService {
     public Projeto pesquisarProjetoPeloNome(String nome) {
         Optional <Projeto> optionalProjeto = projetoRepository.findByNomeDoProjeto(nome);
 
-
         if (optionalProjeto.isPresent()) {
             return optionalProjeto.get();
         }
 
         throw new ProjetoNaoExistenteException();
     }
+
     public void excluirProjetoPeloId(int id) {
         Projeto projeto = pesquisarProjetoPeloId(id);
 
