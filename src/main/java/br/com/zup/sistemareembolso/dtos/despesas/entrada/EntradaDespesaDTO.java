@@ -1,17 +1,16 @@
 package br.com.zup.sistemareembolso.dtos.despesas.entrada;
 
 import br.com.zup.sistemareembolso.dtos.notafiscal.entrada.NotaFiscalDTO;
-import br.com.zup.sistemareembolso.models.*;
-import org.hibernate.validator.constraints.br.CPF;
+import br.com.zup.sistemareembolso.models.Categoria;
+import br.com.zup.sistemareembolso.models.Colaborador;
+import br.com.zup.sistemareembolso.models.Despesa;
+import br.com.zup.sistemareembolso.models.Projeto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class EntradaDespesaDTO {
-
-    @CPF(message = "{validacao.cpf}")
-    private String cpf;
 
     @NotBlank(message = "{validacao.notblank}")
     private String descricao;
@@ -30,20 +29,21 @@ public class EntradaDespesaDTO {
 
     public EntradaDespesaDTO() {}
 
-    public String getCpf() {
-        return cpf; }
-    public void setCpf(String cpf) {
-        this.cpf = cpf; }
-
     public String getDescricao() {
-        return descricao; }
+        return descricao;
+    }
+
     public void setDescricao(String descricao) {
-        this.descricao = descricao; }
+        this.descricao = descricao;
+    }
 
     public double getValor() {
-        return valor; }
+        return valor;
+    }
+
     public void setValor(double valor) {
-        this.valor = valor; }
+        this.valor = valor;
+    }
 
     public int getProjetoId() {
         return projetoId;
@@ -69,11 +69,11 @@ public class EntradaDespesaDTO {
         this.notaFiscal = notaFiscal;
     }
 
-    public Despesa converterDTOparaDespesas(){
+    public Despesa converterDTOParaDespesa(String cpfDoColaborador) {
         Despesa despesa = new Despesa();
 
         Colaborador colaborador = new Colaborador();
-        colaborador.setCpf(this.cpf);
+        colaborador.setCpf(cpfDoColaborador);
 
         Projeto projeto = new Projeto();
         projeto.setId(projetoId);
