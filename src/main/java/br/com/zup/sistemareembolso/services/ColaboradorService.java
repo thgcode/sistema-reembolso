@@ -47,7 +47,7 @@ public class ColaboradorService {
     }
 
     private void validarSePodeAlterarColaborador(Colaborador colaboradorAtualizador, Colaborador colaboradorAtualizado) {
-        if (!colaboradorAtualizado.equals(colaboradorAtualizador) && !colaboradorAtualizador.getCargo().equals(Cargo.DIRETOR)) {
+        if (!colaboradorAtualizado.getCpf().equals(colaboradorAtualizador.getCpf()) && !colaboradorAtualizador.getCargo().equals(Cargo.DIRETOR)) {
             throw new PermissaoNegadaParaAtualizarOsDadosException();
         }
     }
@@ -91,8 +91,12 @@ public class ColaboradorService {
             colaborador.setDigitoDaConta(colaboradorAtualizado.getDigitoDaConta());
         }
 
-        if (!colaborador.getCargo().equals(colaboradorAtualizado.getCargo()) && colaboradorAtualizadorDoBanco.getCpf().equals(colaboradorAtualizado.getCpf())) {
+        if (colaboradorAtualizado.getCargo() != null && !colaborador.getCargo().equals(colaboradorAtualizado.getCargo()) && colaboradorAtualizadorDoBanco.getCpf().equals(colaboradorAtualizado.getCpf())) {
             throw new PermissaoNegadaParaAtualizarOsDadosException();
+        }
+
+        if (colaboradorAtualizado.getCargo() != null && !colaboradorAtualizado.getCargo().equals(colaborador.getCargo())) {
+            colaborador.setCargo(colaboradorAtualizado.getCargo());
         }
 
         return colaboradorRepository.save(colaborador);
