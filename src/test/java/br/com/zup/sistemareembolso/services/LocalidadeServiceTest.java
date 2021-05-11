@@ -1,6 +1,5 @@
 package br.com.zup.sistemareembolso.services;
 
-import br.com.zup.sistemareembolso.exceptions.LocalidadeNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.LocalidadeRepetidaException;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.repositories.LocalidadeRepository;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @SpringBootTest
@@ -52,4 +52,14 @@ public class LocalidadeServiceTest {
         Mockito.verify(localidadeRepository, Mockito.never()).save(localidade);
     }
 
+    @Test
+    public void testarListarLocalidades() {
+        Iterable <Localidade> listaDeLocalidades = Arrays.asList(localidade);
+
+        Mockito.when(localidadeRepository.findAll()).thenReturn(listaDeLocalidades);
+
+        Assertions.assertSame(listaDeLocalidades, localidadeService.listarLocalidades());
+
+        Mockito.verify(localidadeRepository, Mockito.times(1)).findAll();
+    }
 }
