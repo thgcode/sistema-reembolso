@@ -25,7 +25,7 @@ public class DespesaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SaidaDespesaDTO cadastrarDespesa(@RequestBody @Valid EntradaDespesaDTO despesaDTO) {
-        Despesa despesa = despesaDTO.converterDTOparaDespesas();
+        Despesa despesa = despesaDTO.converterDTOParaDespesa();
         Despesa objetoDespesa = despesaService.adicionarDespesa(despesa);
 
         return SaidaDespesaDTO.converterDespesaParaDTO(objetoDespesa);
