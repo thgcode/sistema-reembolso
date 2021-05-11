@@ -81,4 +81,22 @@ public class LocalidadeServiceTest {
             localidadeService.pesquisarLocalidadePeloCodigo(1);
         });
     }
+
+    @Test
+    public void testarPesquisarLocalidadePeloNomeCaminhoBom() {
+        Mockito.when(localidadeRepository.findByNome(localidade.getNome())).thenReturn(Optional.of(localidade));
+
+        Assertions.assertSame(localidade, localidadeService.pesquisarLocalidadePeloNome(localidade.getNome()));
+
+        Mockito.verify(localidadeRepository, Mockito.times(1)).findByNome(localidade.getNome());
+    }
+
+    @Test
+    public void testarPesquisarLocalidadePeloNomeCaminhoRuim() {
+        Mockito.when(localidadeRepository.findByNome(localidade.getNome())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(LocalidadeNaoExistenteException.class, () -> {
+            localidadeService.pesquisarLocalidadePeloNome(localidade.getNome());
+        });
+    }
 }
