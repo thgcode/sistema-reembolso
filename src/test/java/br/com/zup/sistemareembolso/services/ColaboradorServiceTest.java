@@ -3,6 +3,7 @@ package br.com.zup.sistemareembolso.services;
 import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.ColaboradorRepetidoException;
 import br.com.zup.sistemareembolso.exceptions.ErroDoSistemaException;
+import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaAtualizarOsDadosException;
 import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Projeto;
@@ -170,4 +171,39 @@ public class ColaboradorServiceTest {
 
         Assertions.assertEquals("teste@teste.com.br", colaborador.getEmail());
     }
+
+    @Test
+    public void testarAtualizarColaboradorCaminhoRuimColaboradorQuererSerDiretor(){
+        Optional<Colaborador> optionalColaborador = Optional.of(this.colaborador);
+
+        Mockito.when(colaboradorRepository.save(Mockito.any(Colaborador.class))).thenReturn(this.colaborador);
+        Mockito.when(colaboradorRepository.findById(colaborador.getCpf())).thenReturn(optionalColaborador);
+
+        Colaborador colaboradorAtualizado = new Colaborador();
+        colaboradorAtualizado.setCpf(colaborador.getCpf());
+        colaboradorAtualizado.setCargo(Cargo.DIRETOR);
+
+        Assertions.assertThrows(PermissaoNegadaParaAtualizarOsDadosException.class, () -> {
+            colaboradorService.atualizarColaborador(colaborador, colaboradorAtualizado);
+        });
+    }
+
+    @Test
+    public void testarAtualizarColaboradorCaminhoRuimColaboradorSerPromovidoPeloDiretor() {
+        Optional<Colaborador> optionalColaborador = Optional.of(this.colaborador);
+        Optional <Colaborador> optionalDiretor = Optional.of(diretor);
+
+        Mockito.when(colaboradorRepository.save(Mockito.any(Colaborador.class))).thenReturn(this.colaborador);
+        Mockito.when(colaboradorRepository.findById(colaborador.getCpf())).thenReturn(optionalColaborador);
+        Mockito.when(colaboradorRepository.findById(diretor.getCpf())).thenReturn(optionalDiretor);
+
+        Colaborador colaboradorAtualizado = new Colaborador();
+        colaboradorAtualizado.setCpf(colaborador.getCpf());
+        colaboradorAtualizado.setCargo(Cargo.SUPERVISOR);
+
+        colaboradorService.atualizarColaborador(diretor, colaboradorAtualizado);
+
+        Assertions.assertEquals(Cargo.SUPERVISOR, colaboradorAtualizado.getCargo());
+    }
+
 }
