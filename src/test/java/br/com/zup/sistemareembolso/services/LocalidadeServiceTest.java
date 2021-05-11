@@ -2,6 +2,8 @@ package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.LocalidadeNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.LocalidadeRepetidaException;
+import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaCriarLocalidadeException;
+import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.repositories.LocalidadeRepository;
@@ -37,6 +39,12 @@ public class LocalidadeServiceTest {
         localidade.setNome("Pelotas");
 
         diretor = new Colaborador();
+        diretor.setNomeCompleto("Thiago Seus");
+        diretor.setCargo(Cargo.DIRETOR);
+        diretor.setEmail("thiago.seus@zup.com.br");
+        diretor.setCpf("961.696.140-30");
+
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(diretor.getCpf())).thenReturn(diretor);
     }
 
     @Test
@@ -59,6 +67,17 @@ public class LocalidadeServiceTest {
         });
 
         Mockito.verify(localidadeRepository, Mockito.never()).save(localidade);
+    }
+
+    public void testarAdicionarLocalidadeCaminhoRuimOperacionalQuerCriarLocalidade() {
+        Mockito.when(localidadeRepository.findByNome(localidade.getNome())).thenReturn(Optional.of(localidade));
+        Mockito.when(localidadeRepository.save(localidade)).thenReturn(localidade);
+
+        diretor.setCargo(Cargo.OPERACIONAL);
+
+        Assertions.assertThrows(PermissaoNegadaParaCriarLocalidadeException.class, () -> {
+            localidadeService.adicionarLocalidade(localidade, diretor);
+        });
     }
 
     @Test
