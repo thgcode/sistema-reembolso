@@ -156,4 +156,26 @@ Mockito.verify(projetoRepository, Mockito.times(1)).findById(1);
 
         Mockito.verify(projetoRepository, Mockito.never()).delete(projeto);
     }
+
+    @Test
+    public void testarDescontarVerbaDoProjetoCaminhoBom() {
+        Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(Optional.of(projeto));
+        Mockito.when(projetoRepository.save(projeto)).thenReturn(projeto);
+
+        Assertions.assertEquals(4950.0, projetoService.descontarValorDaDespesa(1, 50.0).getVerba());
+
+        Mockito.verify(projetoRepository, Mockito.times(1)).save(projeto);
+    }
+
+    @Test
+    public void testarDescontarVerbaDoProjetoCaminhoRuim() {
+        Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(Optional.empty());
+        Mockito.when(projetoRepository.save(projeto)).thenReturn(projeto);
+
+        Assertions.assertThrows(ProjetoNaoExistenteException.class, () -> {
+            projetoService.descontarValorDaDespesa(1, 50.0);
+        });
+
+        Mockito.verify(projetoRepository, Mockito.never()).save(projeto);
+    }
 }
