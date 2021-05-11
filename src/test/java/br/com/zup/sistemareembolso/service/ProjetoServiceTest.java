@@ -134,4 +134,26 @@ Mockito.verify(projetoRepository, Mockito.times(1)).findById(1);
             projetoService.pesquisarProjetoPeloNome("Teste");
         });
     }
+
+    @Test
+    public void testarExcluirProjetoPeloIdCaminhoBom() {
+        Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(Optional.of(projeto));
+        Mockito.doNothing().when(projetoRepository).delete(projeto);
+
+        projetoService.excluirProjetoPeloId(projeto.getId());
+
+        Mockito.verify(projetoRepository, Mockito.times(1)).delete(projeto);
+    }
+
+    @Test
+    public void testarExcluirProjetoPeloIdCaminhoRuim() {
+        Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(Optional.empty());
+        Mockito.doNothing().when(projetoRepository).delete(projeto);
+
+        Assertions.assertThrows(ProjetoNaoExistenteException.class, () -> {
+            projetoService.excluirProjetoPeloId(projeto.getId());
+        });
+
+        Mockito.verify(projetoRepository, Mockito.never()).delete(projeto);
+    }
 }
