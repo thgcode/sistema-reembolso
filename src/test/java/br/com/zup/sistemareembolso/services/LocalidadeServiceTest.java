@@ -2,6 +2,7 @@ package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.LocalidadeNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.LocalidadeRepetidaException;
+import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.repositories.LocalidadeRepository;
 import org.junit.jupiter.api.Assertions;
@@ -21,14 +22,21 @@ public class LocalidadeServiceTest {
     private LocalidadeService localidadeService;
 
     @MockBean
+    private ColaboradorService colaboradorService;
+
+    @MockBean
     private LocalidadeRepository localidadeRepository;
 
     private Localidade localidade;
+
+    private Colaborador diretor;
 
     @BeforeEach
     public void setUp() {
         localidade = new Localidade();
         localidade.setNome("Pelotas");
+
+        diretor = new Colaborador();
     }
 
     @Test
@@ -36,7 +44,7 @@ public class LocalidadeServiceTest {
         Mockito.when(localidadeRepository.findByNome(localidade.getNome())).thenReturn(Optional.empty());
         Mockito.when(localidadeRepository.save(localidade)).thenReturn(localidade);
 
-        Assertions.assertSame(localidade, localidadeService.adicionarLocalidade(localidade));
+        Assertions.assertSame(localidade, localidadeService.adicionarLocalidade(localidade, diretor));
 
         Mockito.verify(localidadeRepository, Mockito.times(1)).save(localidade);
     }
@@ -47,7 +55,7 @@ public class LocalidadeServiceTest {
         Mockito.when(localidadeRepository.save(localidade)).thenReturn(localidade);
 
         Assertions.assertThrows(LocalidadeRepetidaException.class, () -> {
-            localidadeService.adicionarLocalidade(localidade);
+            localidadeService.adicionarLocalidade(localidade, diretor);
         });
 
         Mockito.verify(localidadeRepository, Mockito.never()).save(localidade);

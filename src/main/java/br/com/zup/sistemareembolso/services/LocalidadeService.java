@@ -2,6 +2,8 @@ package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.LocalidadeNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.LocalidadeRepetidaException;
+import br.com.zup.sistemareembolso.models.Cargo;
+import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.repositories.LocalidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,16 @@ public class LocalidadeService {
     @Autowired
     private LocalidadeRepository localidadeRepository;
 
-    public Localidade adicionarLocalidade(Localidade localidade) {
+    @Autowired
+    private ColaboradorService colaboradorService;
+
+    public Localidade adicionarLocalidade(Localidade localidade, Colaborador colaborador) {
+        Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
+
+        if (colaborador.getCargo().equals(Cargo.GERENTE) || colaborador.getCargo().equals(Cargo.DIRETOR)) {
+            throw new RuntimeException("Permissão negada para criar a localidade");
+        }
+
         try {
             pesquisarLocalidadePeloNome(localidade.getNome());
             throw new LocalidadeRepetidaException();
