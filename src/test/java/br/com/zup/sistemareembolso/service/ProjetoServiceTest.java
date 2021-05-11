@@ -1,6 +1,7 @@
 package br.com.zup.sistemareembolso.service;
 
 import br.com.zup.sistemareembolso.exceptions.DoisProjetosTemOMesmoCodigoException;
+import br.com.zup.sistemareembolso.exceptions.ProjetoNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.ProjetoRepetidoException;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.models.Projeto;
@@ -37,6 +38,7 @@ public class ProjetoServiceTest {
     public void setUp() {
         projeto = new Projeto();
 
+        projeto.setId(1);
         projeto.setNomeDoProjeto("Teste");
         projeto.setCodigoDoProjeto("tst");
         projeto.setVerba(5000);
@@ -94,4 +96,25 @@ public class ProjetoServiceTest {
 
         Mockito.verify(projetoRepository, Mockito.times(1)).findAll();
     }
+
+    @Test
+    public void testarPesquisarProjetoPeloIdCaminhoBom() {
+        Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(Optional.of(projeto));
+
+        Assertions.assertSame(projeto, projetoService.pesquisarProjetoPeloId(1));
+
+Mockito.verify(projetoRepository, Mockito.times(1)).findById(1);
+    }
+
+    @Test
+    public void testarPesquisarProjetoPeloIdCaminhoRuim() {
+        Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(ProjetoNaoExistenteException.class, () -> {
+            projetoService.pesquisarProjetoPeloId(1);
+        });
+
+        Mockito.verify(projetoRepository, Mockito.times(1)).findById(1);
+    }
+
 }
