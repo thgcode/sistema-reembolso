@@ -4,12 +4,11 @@ import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.ColaboradorRepetidoException;
 import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
-import br.com.zup.sistemareembolso.models.TipoDaConta;
 import br.com.zup.sistemareembolso.repositories.ColaboradorRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
@@ -45,33 +44,52 @@ public class ColaboradorService {
         Colaborador colaborador = pesquisarColaboradorPorCpf(cpf);
         colaboradorRepository.delete(colaborador);
     }
-    public Colaborador atualizarColaborador(Colaborador atualizarZupper){
-        Colaborador colaborador = pesquisarColaboradorPorCpf(atualizarZupper.getCpf());
-        if(!colaborador.getEmail().equals(atualizarZupper.getEmail()) && atualizarZupper.getEmail() != null){
-            colaborador.setEmail(atualizarZupper.getEmail());
+
+    private void validarSePodeAlterarColaborador(Colaborador colaboradorAtualizador, Colaborador colaboradorAtualizado) {
+        if (!colaboradorAtualizado.equals(colaboradorAtualizador) && !colaboradorAtualizador.getCargo().equals(Cargo.DIRETOR)) {
+            throw new  PermissaoNegadaParaAtualizarOsDadosException();
         }
-        if(!colaborador.getSenha().equals(atualizarZupper.getSenha()) && atualizarZupper.getSenha() != null){
-            String senhaEncoder = encoder.encode(atualizarZupper.getSenha());
+    }
+
+    public Colaborador atualizarColaborador(Colaborador colaboradorAtualizador, Colaborador colaboradorAtualizado){
+        Colaborador colaboradorAtualizadorDoBanco = pesquisarColaboradorPorCpf(colaboradorAtualizador.getCpf());
+        Colaborador colaborador = pesquisarColaboradorPorCpf(colaboradorAtualizado.getCpf());
+
+        validarSePodeAlterarColaborador(colaboradorAtualizador, colaboradorAtualizado);
+
+        if(!colaborador.getEmail().equals(colaboradorAtualizado.getEmail()) && colaboradorAtualizado.getEmail() != null){
+            colaborador.setEmail(colaboradorAtualizado.getEmail());
+        }
+
+        if(!colaborador.getSenha().equals(colaboradorAtualizado.getSenha()) && colaboradorAtualizado.getSenha() != null){
+            String senhaEncoder = encoder.encode(colaboradorAtualizado.getSenha());
             colaborador.setSenha(senhaEncoder);
         }
-        if(!colaborador.getBanco().equals(atualizarZupper.getBanco()) && atualizarZupper.getBanco() != null){
-            colaborador.setBanco(atualizarZupper.getBanco());
+
+        if(!colaborador.getBanco().equals(colaboradorAtualizado.getBanco()) && colaboradorAtualizado.getBanco() != null){
+            colaborador.setBanco(colaboradorAtualizado.getBanco());
         }
-        if(!colaborador.getNumeroDoBanco().equals(atualizarZupper.getNumeroDoBanco()) && atualizarZupper.getNumeroDoBanco() != null){
-            colaborador.setNumeroDoBanco(atualizarZupper.getNumeroDoBanco());
+
+        if(!colaborador.getNumeroDoBanco().equals(colaboradorAtualizado.getNumeroDoBanco()) && colaboradorAtualizado.getNumeroDoBanco() != null){
+            colaborador.setNumeroDoBanco(colaboradorAtualizado.getNumeroDoBanco());
         }
-        if(!colaborador.getAgencia().equals(atualizarZupper.getAgencia()) && atualizarZupper.getAgencia() != null){
-            colaborador.setAgencia(atualizarZupper.getAgencia());
+
+        if(!colaborador.getAgencia().equals(colaboradorAtualizado.getAgencia()) && colaboradorAtualizado.getAgencia() != null){
+            colaborador.setAgencia(colaboradorAtualizado.getAgencia());
         }
-        if(colaborador.getDigitoDaAgencia() == atualizarZupper.getDigitoDaAgencia() && atualizarZupper.getDigitoDaAgencia() >0){
-            colaborador.setDigitoDaAgencia(atualizarZupper.getDigitoDaAgencia());
+
+        if(colaborador.getDigitoDaAgencia() == colaboradorAtualizado.getDigitoDaAgencia() && colaboradorAtualizado.getDigitoDaAgencia() >0){
+            colaborador.setDigitoDaAgencia(colaboradorAtualizado.getDigitoDaAgencia());
         }
-        if(!colaborador.getConta().equals(atualizarZupper.getConta()) && atualizarZupper.getConta() != null){
-            colaborador.setConta(atualizarZupper.getConta());
+
+        if(!colaborador.getConta().equals(colaboradorAtualizado.getConta()) && colaboradorAtualizado.getConta() != null){
+            colaborador.setConta(colaboradorAtualizado.getConta());
         }
-        if(colaborador.getDigitoDaConta() == atualizarZupper.getDigitoDaConta() && atualizarZupper.getDigitoDaConta() >0){
-            colaborador.setDigitoDaConta(atualizarZupper.getDigitoDaConta());
+
+        if(colaborador.getDigitoDaConta() == colaboradorAtualizado.getDigitoDaConta() && colaboradorAtualizado.getDigitoDaConta() >0){
+            colaborador.setDigitoDaConta(colaboradorAtualizado.getDigitoDaConta());
         }
+
         return colaboradorRepository.save(colaborador);
     }
 
