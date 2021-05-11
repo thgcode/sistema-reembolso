@@ -55,7 +55,7 @@ public class LocalidadeServiceTest {
 
     @Test
     public void testarListarLocalidades() {
-        Iterable <Localidade> listaDeLocalidades = Arrays.asList(localidade);
+        Iterable<Localidade> listaDeLocalidades = Arrays.asList(localidade);
 
         Mockito.when(localidadeRepository.findAll()).thenReturn(listaDeLocalidades);
 
@@ -99,4 +99,25 @@ public class LocalidadeServiceTest {
             localidadeService.pesquisarLocalidadePeloNome(localidade.getNome());
         });
     }
+
+    @Test
+    public void testarExcluirLocalidadePeloIdCaminhoBom() {
+        Mockito.when(localidadeRepository.findById(localidade.getCodLocalidade())).thenReturn(Optional.of(localidade));
+        Mockito.doNothing().when(localidadeRepository).delete(localidade);
+
+        localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade());
+
+        Mockito.verify(localidadeRepository, Mockito.times(1)).delete(localidade);
+    }
+
+    @Test
+    public void testarExcluirLocalidadePeloCodigoCaminhoRuim() {
+        Mockito.when(localidadeRepository.findById(localidade.getCodLocalidade())).thenReturn(Optional.empty());
+        Mockito.doNothing().when(localidadeRepository).delete(localidade);
+
+        Assertions.assertThrows(LocalidadeNaoExistenteException.class, () -> {
+            localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade());
+        });
+    }
+
 }
