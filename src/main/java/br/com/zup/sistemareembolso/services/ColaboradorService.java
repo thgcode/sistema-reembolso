@@ -2,6 +2,7 @@ package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.ColaboradorRepetidoException;
+import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaAtualizarOsDadosException;
 import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.repositories.ColaboradorRepository;
@@ -47,7 +48,7 @@ public class ColaboradorService {
 
     private void validarSePodeAlterarColaborador(Colaborador colaboradorAtualizador, Colaborador colaboradorAtualizado) {
         if (!colaboradorAtualizado.equals(colaboradorAtualizador) && !colaboradorAtualizador.getCargo().equals(Cargo.DIRETOR)) {
-            throw new  PermissaoNegadaParaAtualizarOsDadosException();
+            throw new PermissaoNegadaParaAtualizarOsDadosException();
         }
     }
 
@@ -88,6 +89,10 @@ public class ColaboradorService {
 
         if(colaborador.getDigitoDaConta() == colaboradorAtualizado.getDigitoDaConta() && colaboradorAtualizado.getDigitoDaConta() >0){
             colaborador.setDigitoDaConta(colaboradorAtualizado.getDigitoDaConta());
+        }
+
+        if (!colaborador.getCargo().equals(colaboradorAtualizado.getCargo()) && colaboradorAtualizadorDoBanco.getCpf().equals(colaboradorAtualizado.getCpf())) {
+            throw new PermissaoNegadaParaAtualizarOsDadosException();
         }
 
         return colaboradorRepository.save(colaborador);
