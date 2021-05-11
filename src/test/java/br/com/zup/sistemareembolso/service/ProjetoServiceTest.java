@@ -117,4 +117,21 @@ Mockito.verify(projetoRepository, Mockito.times(1)).findById(1);
         Mockito.verify(projetoRepository, Mockito.times(1)).findById(1);
     }
 
+    @Test
+    public void testarPesquisarProjetoPeloNomeCaminhoBom() {
+        Mockito.when(projetoRepository.findByNomeDoProjeto(projeto.getNomeDoProjeto())).thenReturn(Optional.of(projeto));
+
+        Assertions.assertSame(projeto, projetoService.pesquisarProjetoPeloNome("Teste"));
+
+        Mockito.verify(projetoRepository, Mockito.times(1)).findByNomeDoProjeto("Teste");
+    }
+
+    @Test
+    public void testarPesquisarProjetoPeloNomeCaminhoRuim() {
+        Mockito.when(projetoRepository.findByNomeDoProjeto(projeto.getNomeDoProjeto())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(ProjetoNaoExistenteException.class, () -> {
+            projetoService.pesquisarProjetoPeloNome("Teste");
+        });
+    }
 }
