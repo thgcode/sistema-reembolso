@@ -2,6 +2,7 @@ package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.ColaboradorRepetidoException;
+import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.TipoDaConta;
 import br.com.zup.sistemareembolso.repositories.ColaboradorRepository;
@@ -24,9 +25,10 @@ public class ColaboradorService {
             pesquisarColaboradorPorCpf(colaborador.getCpf());
             throw new ColaboradorRepetidoException();
         } catch (ColaboradorNaoExistenteException exception) {
-        String senhaEncoder = encoder.encode(colaborador.getSenha());
-        colaborador.setSenha(senhaEncoder);
-        return colaboradorRepository.save(colaborador);
+            String senhaEncoder = encoder.encode(colaborador.getSenha());
+            colaborador.setSenha(senhaEncoder);
+            colaborador.setCargo(Cargo.OPERACIONAL);
+            return colaboradorRepository.save(colaborador);
         }
     }
 
@@ -44,14 +46,14 @@ public class ColaboradorService {
         colaboradorRepository.delete(colaborador);
     }
     public Colaborador atualizarColaborador(Colaborador atualizarZupper){
-       Colaborador colaborador = pesquisarColaboradorPorCpf(atualizarZupper.getCpf());
-       if(!colaborador.getEmail().equals(atualizarZupper.getEmail()) && atualizarZupper.getEmail() != null){
-           colaborador.setEmail(atualizarZupper.getEmail());
-       }
-      if(!colaborador.getSenha().equals(atualizarZupper.getSenha()) && atualizarZupper.getSenha() != null){
-          String senhaEncoder = encoder.encode(atualizarZupper.getSenha());
-          colaborador.setSenha(senhaEncoder);
-       }
+        Colaborador colaborador = pesquisarColaboradorPorCpf(atualizarZupper.getCpf());
+        if(!colaborador.getEmail().equals(atualizarZupper.getEmail()) && atualizarZupper.getEmail() != null){
+            colaborador.setEmail(atualizarZupper.getEmail());
+        }
+        if(!colaborador.getSenha().equals(atualizarZupper.getSenha()) && atualizarZupper.getSenha() != null){
+            String senhaEncoder = encoder.encode(atualizarZupper.getSenha());
+            colaborador.setSenha(senhaEncoder);
+        }
         if(!colaborador.getBanco().equals(atualizarZupper.getBanco()) && atualizarZupper.getBanco() != null){
             colaborador.setBanco(atualizarZupper.getBanco());
         }
