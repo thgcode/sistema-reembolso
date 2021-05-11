@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @SpringBootTest
@@ -83,4 +84,14 @@ public class ProjetoServiceTest {
         Mockito.verify(projetoRepository, Mockito.never()).save(projeto);
     }
 
+    @Test
+    public void testarListarProjetos() {
+        Iterable <Projeto> listaDeProjetos = Arrays.asList(projeto);
+
+        Mockito.when(projetoRepository.findAll()).thenReturn(listaDeProjetos);
+
+        Assertions.assertSame(listaDeProjetos, projetoService.listarProjetos());
+
+        Mockito.verify(projetoRepository, Mockito.times(1)).findAll();
+    }
 }
