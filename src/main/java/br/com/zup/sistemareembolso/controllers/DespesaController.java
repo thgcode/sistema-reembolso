@@ -24,8 +24,10 @@ public class DespesaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SaidaDespesaDTO cadastrarDespesa(@RequestBody @Valid EntradaDespesaDTO despesaDTO) {
-        Despesa despesa = despesaDTO.converterDTOParaDespesa();
+    public SaidaDespesaDTO cadastrarDespesa(@RequestBody @Valid EntradaDespesaDTO despesaDTO, Authentication autenticacao) {
+        ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
+
+        Despesa despesa = despesaDTO.converterDTOParaDespesa(login.getCpf());
         Despesa objetoDespesa = despesaService.adicionarDespesa(despesa);
 
         return SaidaDespesaDTO.converterDespesaParaDTO(objetoDespesa);
@@ -59,8 +61,6 @@ public class DespesaController {
         ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
 
         Colaborador colaborador = new Colaborador();
-        System.out.println(autenticacao.toString());
-        System.out.println(login);
         colaborador.setCpf(login.getCpf());
 
         Despesa despesa = new Despesa();
