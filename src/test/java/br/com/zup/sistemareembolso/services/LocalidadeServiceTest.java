@@ -1,5 +1,6 @@
 package br.com.zup.sistemareembolso.services;
 
+import br.com.zup.sistemareembolso.exceptions.LocalidadeNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.LocalidadeRepetidaException;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.repositories.LocalidadeRepository;
@@ -61,5 +62,23 @@ public class LocalidadeServiceTest {
         Assertions.assertSame(listaDeLocalidades, localidadeService.listarLocalidades());
 
         Mockito.verify(localidadeRepository, Mockito.times(1)).findAll();
+    }
+
+    @Test
+    public void testarPesquisarLocalidadePeloCodigoCaminhoBom() {
+        Mockito.when(localidadeRepository.findById(1)).thenReturn(Optional.of(localidade));
+
+        Assertions.assertSame(localidade, localidadeService.pesquisarLocalidadePeloCodigo(1));
+
+        Mockito.verify(localidadeRepository, Mockito.times(1)).findById(1);
+    }
+
+    @Test
+    public void testarPesquisarLocalidadePeloCodigoCaminhoRuim() {
+        Mockito.when(localidadeRepository.findById(1)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(LocalidadeNaoExistenteException.class, () -> {
+            localidadeService.pesquisarLocalidadePeloCodigo(1);
+        });
     }
 }
