@@ -1,11 +1,14 @@
 package br.com.zup.sistemareembolso.dtos.colaborador.entrada;
 
-import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.models.TipoDaConta;
 import org.hibernate.validator.constraints.br.CPF;
-;import javax.validation.constraints.*;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 public class EntradaColaboradorDTO {
 
@@ -20,9 +23,6 @@ public class EntradaColaboradorDTO {
 
     @CPF(message = "{validacao.cpf}")
     private String cpf;
-
-    @NotNull()
-    private Cargo cargo;
 
     @NotBlank(message = "{validacao.notblank}")
     private String banco;
@@ -81,14 +81,6 @@ public class EntradaColaboradorDTO {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public Cargo getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
     }
 
     public String getBanco() {
@@ -162,7 +154,6 @@ public class EntradaColaboradorDTO {
         colaborador.setSenha(this.senha);
         colaborador.setNomeCompleto(this.nomeCompleto);
         colaborador.setCpf(this.cpf);
-        colaborador.setCargo(this.cargo);
         colaborador.setBanco(this.banco);
         colaborador.setNumeroDoBanco(this.numeroDoBanco);
         colaborador.setAgencia(this.agencia);

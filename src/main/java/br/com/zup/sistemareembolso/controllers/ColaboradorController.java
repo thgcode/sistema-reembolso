@@ -1,13 +1,14 @@
 package br.com.zup.sistemareembolso.controllers;
 
-import br.com.zup.sistemareembolso.dtos.categoria.saida.SaidaCategoriaDTO;
 import br.com.zup.sistemareembolso.dtos.colaborador.entrada.AtualizaColaboradorDTO;
 import br.com.zup.sistemareembolso.dtos.colaborador.entrada.EntradaColaboradorDTO;
 import br.com.zup.sistemareembolso.dtos.colaborador.saida.SaidaColaboradorDTO;
+import br.com.zup.sistemareembolso.jwt.ColaboradorLogin;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.services.ColaboradorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,7 +27,6 @@ public class ColaboradorController {
         Colaborador objetoColaborador = colaboradorService.adicionarColaborador(colaborador);
 
         return SaidaColaboradorDTO.converterColaboradorParaDTO(objetoColaborador);
-
     }
 
     @GetMapping("{cpf}/")
@@ -40,15 +40,21 @@ public class ColaboradorController {
     public Iterable<Colaborador> pesquisarColaboradorPorProjeto(@PathVariable int id) {
         return colaboradorService.pesquisarColaboradorPorProjeto(id);
     }
-        @DeleteMapping("{cpf}/")
+
+    @DeleteMapping("{cpf}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteClientePeloCpf(@PathVariable String cpf){
         colaboradorService.excluirColaboradorPorCpf(cpf);
     }
 
     @PatchMapping("{cpf}/")
-    public Colaborador atualizarColaboradorParcial(@PathVariable String cpf, @RequestBody @Valid AtualizaColaboradorDTO atualizacaoParcialDTO){
+    public Colaborador atualizarColaboradorParcial(@PathVariable String cpf, @RequestBody @Valid AtualizaColaboradorDTO atualizacaoParcialDTO, Authentication autenticacao) {
+        ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
+
+        Colaborador colaboradorQueVaiAtualizar = new Colaborador();
+        colaboradorQueVaiAtualizar.setCpf(login.getCpf());
+
         Colaborador colaborador = atualizacaoParcialDTO.converterDTOParaColaborador(cpf);
-        return colaboradorService.atualizarColaborador(colaborador);
+        return colaboradorService.atualizarColaborador(colaboradorQueVaiAtualizar, colaborador);
     }
 }
