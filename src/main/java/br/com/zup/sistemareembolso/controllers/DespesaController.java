@@ -14,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("despesas/")
@@ -34,30 +36,42 @@ public class DespesaController {
     }
 
     @GetMapping
-    public Iterable <Despesa> listarTodasDespesas() {
-        return despesaService.listarDespesas();
+    public Iterable <SaidaDespesaDTO> listarTodasDespesas() {
+        List<SaidaDespesaDTO> listaDeDespesas = new ArrayList<>();
+
+        for (Despesa despesa: despesaService.listarDespesas()) {
+            listaDeDespesas.add(SaidaDespesaDTO.converterDespesaParaDTO(despesa));
+        }
+
+        return listaDeDespesas;
     }
 
     @GetMapping("{id}/")
-    public Despesa buscarDespesaPeloId(@PathVariable int id){
-        return despesaService.buscarDespesaPeloId(id);
+    public SaidaDespesaDTO buscarDespesaPeloId(@PathVariable int id){
+        return SaidaDespesaDTO.converterDespesaParaDTO(despesaService.buscarDespesaPeloId(id));
     }
 
     @PatchMapping("{id}/")
-    public Despesa atualizarDespesaParcial(@PathVariable int id,
+    public SaidaDespesaDTO atualizarDespesaParcial(@PathVariable int id,
                                            @RequestBody @Valid AtualizaDespesaDTO
                                                  despesaDTO){
         Despesa despesa = despesaDTO.atualizarDTOParaDespesa(id);
-        return despesaService.atualizarDespesaParcial(despesa);
+        return SaidaDespesaDTO.converterDespesaParaDTO(despesaService.atualizarDespesaParcial(despesa));
     }
 
     @GetMapping("projetos/{codProjeto}/paraAprovacao")
-    public Iterable <Despesa> pesquisarDespesasParaAprovacao(@PathVariable int codProjeto) {
-        return despesaService.pesquisarDespesasEmUmProjetoComOStatus(codProjeto, Status.ENVIADO_PARA_APROVACAO );
+    public Iterable <SaidaDespesaDTO> pesquisarDespesasParaAprovacao(@PathVariable int codProjeto) {
+        List <SaidaDespesaDTO> listaDeDespesas = new ArrayList<>();
+
+        for (Despesa despesa: despesaService.pesquisarDespesasEmUmProjetoComOStatus(codProjeto, Status.ENVIADO_PARA_APROVACAO)) {
+            listaDeDespesas.add(SaidaDespesaDTO.converterDespesaParaDTO(despesa));
+        }
+
+        return listaDeDespesas;
     }
 
     @PatchMapping("{codDespesa}/aprovar/")
-    public Despesa aprovarDespesa(@PathVariable int codDespesa, Authentication autenticacao) {
+    public SaidaDespesaDTO aprovarDespesa(@PathVariable int codDespesa, Authentication autenticacao) {
         ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
 
         Colaborador colaborador = new Colaborador();
@@ -66,11 +80,11 @@ public class DespesaController {
         Despesa despesa = new Despesa();
         despesa.setId(codDespesa);
 
-        return despesaService.aprovarDespesa(despesa, colaborador);
+        return SaidaDespesaDTO.converterDespesaParaDTO(despesaService.aprovarDespesa(despesa, colaborador));
     }
 
     @PatchMapping("{codDespesa}/desaprovar/")
-    public Despesa desaprovarDespesa(@PathVariable int codDespesa, Authentication autenticacao) {
+    public SaidaDespesaDTO desaprovarDespesa(@PathVariable int codDespesa, Authentication autenticacao) {
         ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
 
         Colaborador colaborador = new Colaborador();
@@ -79,7 +93,7 @@ public class DespesaController {
         Despesa despesa = new Despesa();
         despesa.setId(codDespesa);
 
-        return despesaService.reprovarDespesa(despesa, colaborador);
+        return SaidaDespesaDTO.converterDespesaParaDTO(despesaService.reprovarDespesa(despesa, colaborador));
     }
 
     @DeleteMapping
@@ -89,10 +103,16 @@ public class DespesaController {
     }
 
     @GetMapping("porColaborador/{cpf}/")
-    public Iterable <Despesa> pesquisarDespesasPorUmColaborador(@PathVariable String cpf) {
+    public Iterable <SaidaDespesaDTO> pesquisarDespesasPorUmColaborador(@PathVariable String cpf) {
         Colaborador colaborador = new Colaborador();
         colaborador.setCpf(cpf);
 
-        return despesaService.pesquisarDespesasPorColaborador(colaborador);
+        List <SaidaDespesaDTO> listaDeDespesas = new ArrayList<>();
+
+        for (Despesa despesa: despesaService.pesquisarDespesasPorColaborador(colaborador)) {
+            listaDeDespesas.add(SaidaDespesaDTO.converterDespesaParaDTO(despesa));
+        }
+
+        return listaDeDespesas;
     }
 }
