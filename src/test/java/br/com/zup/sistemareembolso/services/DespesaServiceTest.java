@@ -104,17 +104,22 @@ public class DespesaServiceTest {
     }
 
     @Test
-    public void testarSeColaboradorEstaAlocadoNoProjeto(){
-        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf("061.779.129-58")).thenReturn(this.colaborador);
+    public void testarAdicionarDespesaCaminhoRuimColaboradorEstaAlocadoNoProjeto(){
+        Projeto projetoDoColaborador = new Projeto();
+        projeto.setId(2);
 
-        if (this.colaborador.getProjeto().getId() != this.colaborador.getProjeto().getId()) {
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.colaborador.getCpf())).thenReturn(this.colaborador);
+        Mockito.when(projetoService.pesquisarProjetoPeloId(this.projeto.getId())).thenReturn(this.projeto);
+        Mockito.when(projetoService.pesquisarProjetoPeloId(projetoDoColaborador.getId())).thenReturn(projetoDoColaborador);
 
-            Assertions.assertThrows(ColaboradorNaoEstaNoProjetoException.class, () -> {
-                despesaService.adicionarDespesa(this.despesa);
-            });
 
-            Mockito.verify(despesaRepository, Mockito.never()).save(this.despesa);
-        }
+        colaborador.setProjeto(projetoDoColaborador);
+
+        Assertions.assertThrows(ColaboradorNaoEstaNoProjetoException.class, () -> {
+            despesaService.adicionarDespesa(this.despesa);
+        });
+
+        Mockito.verify(despesaRepository, Mockito.never()).save(this.despesa);
     }
 
     @Test

@@ -28,13 +28,12 @@ public class DespesaService {
         despesa.setStatus(Status.ENVIADO_PARA_APROVACAO);
         despesa.setDataEntrada(LocalDate.now());
 
-        /* Verificar se existe o colaborador */
         Colaborador colaborador = colaboradorService.pesquisarColaboradorPorCpf(despesa.getColaborador().getCpf());
         despesa.setColaborador(colaborador);
 
         Projeto projeto = projetoService.pesquisarProjetoPeloId(despesa.getProjeto().getId());
 
-        if (colaborador.getProjeto().getId() != colaborador.getProjeto().getId()) {
+        if (projeto.getId() != colaborador.getProjeto().getId()) {
             throw new ColaboradorNaoEstaNoProjetoException();
         }
 
