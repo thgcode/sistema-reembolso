@@ -79,7 +79,7 @@ public class DespesaServiceTest {
     }
 
     @Test
-    public void testarCadastrarDespesaCaminhoBom() {
+    public void testarCadastrarDespesaCaminhoBomComNotaFiscalJaCadastrada() {
 
         despesa.setStatus(Status.ENVIADO_PARA_APROVACAO);
         despesa.setDataEntrada(LocalDate.now());
@@ -89,17 +89,42 @@ public class DespesaServiceTest {
 
         despesa.setProjeto(this.projeto);
 
-        if (this.despesa.getNotaFiscal().getCodigoDaNota() > 0) {
-            Mockito.when(notaFiscalService.pesquisarNotaFiscal(1)).thenReturn(this.notaFiscal);
-        } else {
-            Mockito.when(notaFiscalService.adicionarNotaFiscal(this.despesa.getNotaFiscal())).thenReturn(this.notaFiscal);
-        }
-
+        this.notaFiscal.setCodigoDaNota(1);
+        Mockito.when(notaFiscalService.pesquisarNotaFiscal(1)).thenReturn(this.notaFiscal);
         despesa.setNotaFiscal(this.notaFiscal);
 
         Mockito.when(despesaRepository.save(Mockito.any(Despesa.class))).thenReturn(this.despesa);
 
         Assertions.assertSame(this.despesa, despesaService.adicionarDespesa(this.despesa));
+
+        Mockito.verify(notaFiscalService, Mockito.times(1)).pesquisarNotaFiscal(this.notaFiscal.getCodigoDaNota());
+        Mockito.verify(despesaRepository, Mockito.times(1)).save(this.despesa);
+        Mockito.verify(notaFiscalService, Mockito.never()).adicionarNotaFiscal(this.notaFiscal);
+    }
+
+    @Test
+    public void testarCadastrarDespesaCaminhoBomComNotaFiscalNaoCadastrada() {
+
+        despesa.setStatus(Status.ENVIADO_PARA_APROVACAO);
+        despesa.setDataEntrada(LocalDate.now());
+
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf("061.779.129-58")).thenReturn(this.colaborador);
+        Mockito.when(projetoService.pesquisarProjetoPeloId(1)).thenReturn(this.projeto);
+
+        despesa.setProjeto(this.projeto);
+
+        this.notaFiscal.setCodigoDaNota(0);
+        this.notaFiscal.setLinkDaImagem("teste");
+        this.notaFiscal.setDataDeEmissao(LocalDate.now());
+        Mockito.when(notaFiscalService.adicionarNotaFiscal(this.notaFiscal)).thenReturn(this.notaFiscal);
+        despesa.setNotaFiscal(this.notaFiscal);
+
+        Mockito.when(despesaRepository.save(Mockito.any(Despesa.class))).thenReturn(this.despesa);
+
+        Assertions.assertSame(this.despesa, despesaService.adicionarDespesa(this.despesa));
+
+        Mockito.verify(notaFiscalService, Mockito.never()).pesquisarNotaFiscal(this.notaFiscal.getCodigoDaNota());
+        Mockito.verify(notaFiscalService, Mockito.times(1)).adicionarNotaFiscal(this.notaFiscal);
         Mockito.verify(despesaRepository, Mockito.times(1)).save(this.despesa);
     }
 
@@ -111,7 +136,6 @@ public class DespesaServiceTest {
         Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.colaborador.getCpf())).thenReturn(this.colaborador);
         Mockito.when(projetoService.pesquisarProjetoPeloId(this.projeto.getId())).thenReturn(this.projeto);
         Mockito.when(projetoService.pesquisarProjetoPeloId(projetoDoColaborador.getId())).thenReturn(projetoDoColaborador);
-
 
         colaborador.setProjeto(projetoDoColaborador);
 
