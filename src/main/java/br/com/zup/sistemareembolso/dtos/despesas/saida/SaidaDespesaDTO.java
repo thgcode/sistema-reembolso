@@ -5,12 +5,16 @@ import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.models.Status;
 
 public class SaidaDespesaDTO {
+    private Integer id;
     private SaidaColaboradorDTO colaborador;
     private String descricao;
     private double valor;
     private Status status;
 
     public SaidaDespesaDTO() {}
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public SaidaColaboradorDTO getColaborador() { return colaborador; }
     public void setColaborador(SaidaColaboradorDTO colaborador) { this.colaborador = colaborador; }
@@ -27,6 +31,7 @@ public class SaidaDespesaDTO {
     public static SaidaDespesaDTO converterDespesaParaDTO(Despesa despesa){
         SaidaDespesaDTO saidaDespesaDTO = new SaidaDespesaDTO();
 
+        saidaDespesaDTO.setId(despesa.getId());
         saidaDespesaDTO.setColaborador(SaidaColaboradorDTO.converterColaboradorParaDTO(despesa.getColaborador()));
         saidaDespesaDTO.setDescricao(despesa.getDescricao());
         saidaDespesaDTO.setValor(despesa.getValor());

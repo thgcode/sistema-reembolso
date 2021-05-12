@@ -47,7 +47,7 @@ public class ProjetoServiceTest {
         projeto.setVerba(5000);
 
         localidade = new Localidade();
-        localidade.setCodLocalidade(1);
+        localidade.setId(1);
         localidade.setNome("Pelotas");
 
         projeto.setLocalidade(localidade);

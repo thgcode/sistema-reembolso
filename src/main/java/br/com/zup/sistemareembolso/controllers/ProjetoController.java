@@ -1,11 +1,9 @@
 package br.com.zup.sistemareembolso.controllers;
 
-import br.com.zup.sistemareembolso.dtos.despesas.saida.SaidaDespesaDTO;
-import br.com.zup.sistemareembolso.dtos.projeto.entrada.ProjetoDTO;
+import br.com.zup.sistemareembolso.dtos.projeto.entrada.EntradaProjetoDTO;
 import br.com.zup.sistemareembolso.dtos.projeto.saida.SaidaProjetoDTO;
 import br.com.zup.sistemareembolso.jwt.ColaboradorLogin;
 import br.com.zup.sistemareembolso.models.Colaborador;
-import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.services.ProjetoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,8 @@ public class ProjetoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SaidaProjetoDTO adicionarProjeto(@Valid @RequestBody ProjetoDTO projetoDTO, Authentication autenticacao) {
+
+    public SaidaProjetoDTO adicionarProjeto(@Valid @RequestBody EntradaProjetoDTO projetoDTO, Authentication autenticacao) {
         ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
 
         Colaborador colaborador = new Colaborador();

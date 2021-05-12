@@ -37,7 +37,7 @@ public class NotaFiscalServiceTest {
     public void setUp() {
         this.notaFiscal = new NotaFiscal();
 
-        this.notaFiscal.setCodigoDaNota(1);
+        this.notaFiscal.setId(1);
         this.notaFiscal.setLinkDaImagem("http://imagemTeste.png");
         this.notaFiscal.setDataDeEmissao(LocalDate.now());
 
@@ -77,7 +77,7 @@ public class NotaFiscalServiceTest {
         NotaFiscal notaFiscal = notaFiscalService.pesquisarNotaFiscal(10);
 
         Assertions.assertSame(this.notaFiscal, notaFiscal);
-        Assertions.assertEquals(notaFiscal.getCodigoDaNota(),1);
+        Assertions.assertEquals(notaFiscal.getId(),1);
     }
 
     @Test
@@ -96,10 +96,10 @@ public class NotaFiscalServiceTest {
     @Test
     public void testarExcluirNotaFiscalaminhoBom(){
 
-        Mockito.when(notaFiscalRepository.findById(notaFiscal.getCodigoDaNota())).thenReturn(Optional.of(this.notaFiscal));
+        Mockito.when(notaFiscalRepository.findById(notaFiscal.getId())).thenReturn(Optional.of(this.notaFiscal));
         Mockito.doNothing().when(notaFiscalRepository).delete(this.notaFiscal);
 
-        notaFiscalService.excluirNotaFiscalPeloCodigo(this.notaFiscal.getCodigoDaNota());
+        notaFiscalService.excluirNotaFiscalPeloCodigo(this.notaFiscal.getId());
 
         Mockito.verify(notaFiscalRepository, Mockito.times(1)).delete(this.notaFiscal);
     }
@@ -128,7 +128,7 @@ public class NotaFiscalServiceTest {
         Iterable <Despesa> despesas = Arrays.asList(despesa);
 
         Mockito.when(despesaService.pesquisarDespesasPeloCodigoDaNotaFiscal(1)).thenReturn(despesas);
-        Mockito.when(notaFiscalRepository.findById(notaFiscal.getCodigoDaNota())).thenReturn(Optional.of(this.notaFiscal));
+        Mockito.when(notaFiscalRepository.findById(notaFiscal.getId())).thenReturn(Optional.of(this.notaFiscal));
 
         Assertions.assertEquals(55.00, notaFiscalService.calcularValorDaNotaPeloId(1));
     }

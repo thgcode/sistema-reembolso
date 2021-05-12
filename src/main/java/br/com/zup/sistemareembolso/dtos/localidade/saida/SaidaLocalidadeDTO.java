@@ -3,23 +3,17 @@ package br.com.zup.sistemareembolso.dtos.localidade.saida;
 import br.com.zup.sistemareembolso.models.Localidade;
 
 public class SaidaLocalidadeDTO {
-    private Integer codLocalidade;
+    private Integer id;
     private String descricao;
 
     public SaidaLocalidadeDTO() {}
 
-    public Integer getCodLocalidade() {
-        return codLocalidade;
-    }
-
-    public void setCodLocalidade(Integer codLocalidade) {
-        this.codLocalidade = codLocalidade;
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getDescricao() {
         return descricao;
     }
-
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
@@ -28,7 +22,7 @@ public class SaidaLocalidadeDTO {
 
         SaidaLocalidadeDTO saidaCategoriaDTO = new SaidaLocalidadeDTO();
 
-        saidaCategoriaDTO.setCodLocalidade(localidade.getCodLocalidade());
+        saidaCategoriaDTO.setId(localidade.getId());
         saidaCategoriaDTO.setDescricao(localidade.getNome());
 
         return saidaCategoriaDTO;
