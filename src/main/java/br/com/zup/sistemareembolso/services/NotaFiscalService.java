@@ -1,8 +1,7 @@
 package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.config.ConfiguracaoDaImagemDaNotaFiscal;
-import br.com.zup.sistemareembolso.exceptions.NotaFiscalForaDaValidadeException;
-import br.com.zup.sistemareembolso.exceptions.NotaFiscalNaoExistenteException;
+import br.com.zup.sistemareembolso.exceptions.*;
 import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.models.NotaFiscal;
 import br.com.zup.sistemareembolso.repositories.NotaFiscalRepository;
@@ -25,11 +24,8 @@ import java.util.Optional;
 @Service
 public class NotaFiscalService {
     private NotaFiscalRepository notaFiscalRepository;
-
     private DespesaService despesaService;
-
     private ConfiguracaoDaImagemDaNotaFiscal configuracaoDaImagemDaNotaFiscal;
-
     private Path localDasImagensDasNotas;
 
     @Autowired
@@ -52,20 +48,18 @@ public class NotaFiscalService {
         String nomeDoArquivo = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {
+
             if (nomeDoArquivo.contains("..") || nomeDoArquivo.contains("/")) {
-                throw new RuntimeException(
-                        "Desculpe! Nome do arquivo contém sequência de caminho inválida" + nomeDoArquivo);
+                throw new CaminhoDoArquivoInvalidoException(nomeDoArquivo);
             }
 
-            // Copia o arquivo para o local de destino (Substituindo arquivo existente pelo
-            // mesmo nome)
+            // Copia o arquivo para o local de destino (Substituindo arquivo existente)
             Path local = localDasImagensDasNotas.resolve(nomeDoArquivo);
             Files.copy(file.getInputStream(), local, StandardCopyOption.REPLACE_EXISTING);
 
             return nomeDoArquivo;
         } catch (IOException ex) {
-            throw new RuntimeException(
-                    "Não foi possivel armazenar o arquivo " + nomeDoArquivo + ". Por favor tente novamente!", ex);
+            throw new ArmazenarArquivoException(nomeDoArquivo, ex);
         }
     }
 
@@ -76,10 +70,10 @@ public class NotaFiscalService {
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new RuntimeException("Arquivo não encontrado " + nomeDoArquivo);
+                throw new ArquivoNaoEncontradoException(nomeDoArquivo);
             }
         } catch (MalformedURLException ex) {
-            throw new RuntimeException("Arquivo não encontrado " + nomeDoArquivo, ex);
+            throw new ArquivoNaoEncontradoException(nomeDoArquivo, ex);
         }
     }
 
@@ -111,13 +105,13 @@ public class NotaFiscalService {
 
     public void excluirNotaFiscalPeloCodigo(int codigoDaNota) {
         NotaFiscal notaFiscal = pesquisarNotaFiscal(codigoDaNota);
-
         notaFiscalRepository.delete(notaFiscal);
     }
 
     public double calcularValorDaNotaPeloId(int codigoDaNota) {
         double valor = 0;
-        NotaFiscal notaFiscal = pesquisarNotaFiscal(codigoDaNota);
+
+        pesquisarNotaFiscal(codigoDaNota);
 
         for (Despesa despesa: despesaService.pesquisarDespesasPeloCodigoDaNotaFiscal(codigoDaNota)) {
             valor += despesa.getValor();

@@ -2,6 +2,7 @@ package br.com.zup.sistemareembolso.controllers;
 
 import br.com.zup.sistemareembolso.dtos.notafiscal.entrada.ImagemDTO;
 import br.com.zup.sistemareembolso.dtos.notafiscal.saida.NotaFiscalSaidaDTO;
+import br.com.zup.sistemareembolso.models.Categoria;
 import br.com.zup.sistemareembolso.models.NotaFiscal;
 import br.com.zup.sistemareembolso.services.NotaFiscalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,10 @@ public class NotaFiscalController {
         double valor = notaFiscalService.calcularValorDaNotaPeloId(codigoDaNota);
 
         return NotaFiscalSaidaDTO.converterDTODeNotaFiscalEValor(notaFiscal, valor);
+    }
+
+    @GetMapping
+    public Iterable <NotaFiscal> listarTodasNotasFiscais() {
+        return notaFiscalService.listarNotasFiscais();
     }
 }
