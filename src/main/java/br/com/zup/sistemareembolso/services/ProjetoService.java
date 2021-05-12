@@ -40,9 +40,9 @@ public class ProjetoService {
         Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
 
         try {
-            return validarProjeto(projeto, colaboradorDoBanco); // Não deve executar o return daqui, mas precisou colocar pra compilar
+            return validarProjeto(projeto, colaboradorDoBanco);
         } catch (ProjetoNaoExistenteException exception) {
-            Localidade localidade = localidadeService.pesquisarLocalidadePeloCodigo(projeto.getLocalidade().getCodLocalidade());
+            Localidade localidade = localidadeService.pesquisarLocalidadePeloCodigo(projeto.getLocalidade().getId());
             projeto.setLocalidade(localidade);
             return projetoRepository.save(projeto);
         }

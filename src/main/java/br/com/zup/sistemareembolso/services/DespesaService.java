@@ -41,8 +41,8 @@ public class DespesaService {
 
         NotaFiscal notaDoBanco;
 
-        if (despesa.getNotaFiscal().getCodigoDaNota() > 0) {
-            notaDoBanco = notaFiscalService.pesquisarNotaFiscal(despesa.getNotaFiscal().getCodigoDaNota());
+        if (despesa.getNotaFiscal().getId() > 0) {
+            notaDoBanco = notaFiscalService.pesquisarNotaFiscal(despesa.getNotaFiscal().getId());
         } else {
             notaDoBanco = notaFiscalService.adicionarNotaFiscal(despesa.getNotaFiscal());
         }
@@ -155,7 +155,7 @@ public class DespesaService {
             throw new DespesaJaReprovadaException();
         }
 
-        notaFiscalService.excluirNotaFiscalPeloCodigo(despesa.getNotaFiscal().getCodigoDaNota());
+        notaFiscalService.excluirNotaFiscalPeloCodigo(despesa.getNotaFiscal().getId());
         despesaRepository.delete(despesa);
     }
 
