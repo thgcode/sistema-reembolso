@@ -9,6 +9,7 @@ import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.models.TipoDaConta;
 import br.com.zup.sistemareembolso.repositories.ColaboradorRepository;
+import br.com.zup.sistemareembolso.repositories.ProjetoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ public class ColaboradorServiceTest {
 
     @MockBean
     ColaboradorRepository colaboradorRepository;
+
+    @MockBean
+    ProjetoRepository projetoRepository;
 
     private Colaborador colaborador;
     private Colaborador diretor;
@@ -54,13 +58,25 @@ public class ColaboradorServiceTest {
         diretor.setCargo(Cargo.DIRETOR);
         diretor.setEmail("thiago.seus@zup.com.br");
         diretor.setCpf("961.696.140-30");
+
+        this.projeto = new Projeto();
+        projeto.setId(1);
+
+        colaborador.setProjeto(projeto);
+        diretor.setProjeto(projeto);
     }
 
     @Test
     public void testarCadastrarColaboradorCaminhoBom(){
+        Optional<Projeto> optionalProjeto = Optional.of(this.projeto);
+
+        Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(optionalProjeto);
         Mockito.when(colaboradorRepository.save(Mockito.any(Colaborador.class))).thenReturn(this.colaborador);
 
         Colaborador colaborador = colaboradorService.adicionarColaborador(this.colaborador);
+        Projeto projeto = new Projeto();
+        projeto.setId(1);
+        colaborador.setProjeto(projeto);
 
         Assertions.assertSame(this.colaborador, colaborador);
         Assertions.assertEquals(this.colaborador, colaborador);
@@ -204,6 +220,20 @@ public class ColaboradorServiceTest {
         colaboradorService.atualizarColaborador(diretor, colaboradorAtualizado);
 
         Assertions.assertEquals(Cargo.SUPERVISOR, colaboradorAtualizado.getCargo());
+    }
+
+    @Test
+    public void testarCriarColaboradorCaminhoRuimProjetoNaoExistente(){
+        Optional<Colaborador> optionalColaborador = Optional.of(this.colaborador);
+        Optional<Projeto> optionalProjeto = Optional.of(this.projeto);
+
+        Mockito.when(colaboradorRepository.findById(colaborador.getCpf())).thenReturn(optionalColaborador);
+        Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(optionalProjeto);
+
+        Projeto projeto = new Projeto();
+        projeto.setId(1);
+
+        Assertions.assertEquals(1, projeto.getId());
     }
 
 }
