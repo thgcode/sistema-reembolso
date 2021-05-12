@@ -5,6 +5,7 @@ import br.com.zup.sistemareembolso.exceptions.ColaboradorRepetidoException;
 import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaAtualizarOsDadosException;
 import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
+import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.repositories.ColaboradorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,13 +21,18 @@ public class ColaboradorService {
     @Autowired
     private ColaboradorRepository colaboradorRepository;
 
+    @Autowired
+    private ProjetoService projetoService;
+
     public Colaborador adicionarColaborador(Colaborador colaborador) {
         try {
             pesquisarColaboradorPorCpf(colaborador.getCpf());
             throw new ColaboradorRepetidoException();
         } catch (ColaboradorNaoExistenteException exception) {
+            Projeto projeto = projetoService.pesquisarProjetoPeloId(colaborador.getProjeto().getId());
             String senhaEncoder = encoder.encode(colaborador.getSenha());
             colaborador.setSenha(senhaEncoder);
+            colaborador.setProjeto(projeto);
             colaborador.setCargo(Cargo.OPERACIONAL);
             return colaboradorRepository.save(colaborador);
         }
