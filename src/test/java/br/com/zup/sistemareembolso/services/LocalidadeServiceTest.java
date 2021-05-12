@@ -3,6 +3,7 @@ package br.com.zup.sistemareembolso.services;
 import br.com.zup.sistemareembolso.exceptions.LocalidadeNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.LocalidadeRepetidaException;
 import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaCriarLocalidadeException;
+import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaExcluirLocalidadeException;
 import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Localidade;
@@ -69,6 +70,7 @@ public class LocalidadeServiceTest {
         Mockito.verify(localidadeRepository, Mockito.never()).save(localidade);
     }
 
+    @Test
     public void testarAdicionarLocalidadeCaminhoRuimOperacionalQuerCriarLocalidade() {
         Mockito.when(localidadeRepository.findByNome(localidade.getNome())).thenReturn(Optional.of(localidade));
         Mockito.when(localidadeRepository.save(localidade)).thenReturn(localidade);
@@ -132,9 +134,23 @@ public class LocalidadeServiceTest {
         Mockito.when(localidadeRepository.findById(localidade.getCodLocalidade())).thenReturn(Optional.of(localidade));
         Mockito.doNothing().when(localidadeRepository).delete(localidade);
 
-        localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade());
+        localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade(), diretor);
 
         Mockito.verify(localidadeRepository, Mockito.times(1)).delete(localidade);
+    }
+
+    @Test
+    public void testarExcluirLocalidadePeloIdCaminhoRuimOperacionalQuerExcluirLocalidade() {
+        Mockito.when(localidadeRepository.findById(localidade.getCodLocalidade())).thenReturn(Optional.of(localidade));
+        Mockito.doNothing().when(localidadeRepository).delete(localidade);
+
+        diretor.setCargo(Cargo.OPERACIONAL);
+
+        Assertions.assertThrows(PermissaoNegadaParaExcluirLocalidadeException.class, () -> {
+            localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade(), diretor);
+        });
+
+        Mockito.verify(localidadeRepository, Mockito.never()).delete(localidade);
     }
 
     @Test
@@ -143,7 +159,7 @@ public class LocalidadeServiceTest {
         Mockito.doNothing().when(localidadeRepository).delete(localidade);
 
         Assertions.assertThrows(LocalidadeNaoExistenteException.class, () -> {
-            localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade());
+            localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade(), diretor);
         });
     }
 
