@@ -6,7 +6,7 @@ import br.com.zup.sistemareembolso.models.Projeto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class ProjetoDTO {
+public class EntradaProjetoDTO {
 
     @NotBlank(message = "{validacao.notblank}")
     private String nomeDoProjeto;
@@ -15,9 +15,9 @@ public class ProjetoDTO {
     private String codigoDoProjeto;
 
     @NotNull()
-    private Integer localidade;
+    private Integer idLocalidade;
 
-    public ProjetoDTO() { }
+    public EntradaProjetoDTO() { }
 
     public String getNomeDoProjeto() {
         return nomeDoProjeto;
@@ -33,12 +33,8 @@ public class ProjetoDTO {
         this.codigoDoProjeto = codigoDoProjeto;
     }
 
-    public Integer getLocalidade() {
-        return localidade;
-    }
-    public void setLocalidade(Integer localidade) {
-        this.localidade = localidade;
-    }
+    public Integer getIdLocalidade() { return idLocalidade; }
+    public void setIdLocalidade(Integer idLocalidade) { this.idLocalidade = idLocalidade; }
 
     public Projeto converterDTOParaProjeto() {
         Projeto projeto = new Projeto();
@@ -48,7 +44,7 @@ public class ProjetoDTO {
 
         Localidade localidade = new Localidade();
 
-        localidade.setCodLocalidade(this.localidade);
+        localidade.setId(this.idLocalidade);
 
         projeto.setLocalidade(localidade);
 

@@ -1,6 +1,6 @@
 package br.com.zup.sistemareembolso.dtos.despesas.entrada;
 
-import br.com.zup.sistemareembolso.dtos.notafiscal.entrada.NotaFiscalDTO;
+import br.com.zup.sistemareembolso.dtos.notafiscal.entrada.EntradaNotaFiscalDTO;
 import br.com.zup.sistemareembolso.models.Categoria;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Despesa;
@@ -25,7 +25,7 @@ public class EntradaDespesaDTO {
     private Integer categoriaId;
 
     @NotNull
-    private NotaFiscalDTO notaFiscal;
+    private EntradaNotaFiscalDTO notaFiscal;
 
     public EntradaDespesaDTO() {}
 
@@ -53,10 +53,10 @@ public class EntradaDespesaDTO {
     public Integer getCategoriaId() { return categoriaId; }
     public void setCategoriaId(Integer categoriaId) { this.categoriaId = categoriaId; }
 
-    public NotaFiscalDTO getNotaFiscal() {
+    public EntradaNotaFiscalDTO getNotaFiscal() {
         return notaFiscal;
     }
-    public void setNotaFiscal(NotaFiscalDTO notaFiscal) {
+    public void setNotaFiscal(EntradaNotaFiscalDTO notaFiscal) {
         this.notaFiscal = notaFiscal;
     }
 

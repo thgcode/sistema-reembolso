@@ -4,13 +4,13 @@ import br.com.zup.sistemareembolso.models.NotaFiscal;
 
 import java.time.LocalDate;
 
-public class NotaFiscalDTO {
+public class EntradaNotaFiscalDTO {
 
     private Integer id;
     private String linkDaImagem;
     private LocalDate dataDeEmissao;
 
-    public NotaFiscalDTO() { }
+    public EntradaNotaFiscalDTO() { }
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
