@@ -15,11 +15,15 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 @SpringBootTest
+@Profile("test")
+@ActiveProfiles("test")
 public class LocalidadeServiceTest {
     @Autowired
     private LocalidadeService localidadeService;
@@ -135,23 +139,20 @@ public class LocalidadeServiceTest {
         Mockito.when(localidadeRepository.findById(localidade.getId())).thenReturn(Optional.of(localidade));
         Mockito.doNothing().when(localidadeRepository).delete(localidade);
 
-        localidadeService.excluirLocalidadePeloCodigo(localidade.getId());
-
-        localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade(), diretor);
-
+        localidadeService.excluirLocalidadePeloCodigo(localidade.getId(), diretor);
 
         Mockito.verify(localidadeRepository, Mockito.times(1)).delete(localidade);
     }
 
     @Test
     public void testarExcluirLocalidadePeloIdCaminhoRuimOperacionalQuerExcluirLocalidade() {
-        Mockito.when(localidadeRepository.findById(localidade.getCodLocalidade())).thenReturn(Optional.of(localidade));
+        Mockito.when(localidadeRepository.findById(localidade.getId())).thenReturn(Optional.of(localidade));
         Mockito.doNothing().when(localidadeRepository).delete(localidade);
 
         diretor.setCargo(Cargo.OPERACIONAL);
 
         Assertions.assertThrows(PermissaoNegadaParaExcluirLocalidadeException.class, () -> {
-            localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade(), diretor);
+            localidadeService.excluirLocalidadePeloCodigo(localidade.getId(), diretor);
         });
 
         Mockito.verify(localidadeRepository, Mockito.never()).delete(localidade);
@@ -162,9 +163,8 @@ public class LocalidadeServiceTest {
         Mockito.when(localidadeRepository.findById(localidade.getId())).thenReturn(Optional.empty());
         Mockito.doNothing().when(localidadeRepository).delete(localidade);
 
-        Assertions.assertThrows(LocalidadeNaoExistenteException.class, () -> {localidadeService.excluirLocalidadePeloCodigo(localidade.getId());
-            localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade(), diretor);
-
+        Assertions.assertThrows(LocalidadeNaoExistenteException.class, () -> {localidadeService.excluirLocalidadePeloCodigo(localidade.getId(), diretor);
+            localidadeService.excluirLocalidadePeloCodigo(localidade.getId(), diretor);
         });
     }
 

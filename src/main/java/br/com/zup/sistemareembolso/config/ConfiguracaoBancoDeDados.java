@@ -9,9 +9,14 @@ import br.com.zup.sistemareembolso.repositories.ProjetoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+
 @Service
+@Profile("!test")
 public class ConfiguracaoBancoDeDados implements ApplicationRunner {
     @Autowired
     private ProjetoRepository projetoRepository;
@@ -21,6 +26,9 @@ public class ConfiguracaoBancoDeDados implements ApplicationRunner {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private Environment environment;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
