@@ -306,6 +306,51 @@ public class DespesaServiceTest {
         Mockito.verify(despesaRepository, Mockito.never()).save(this.despesa);
     }
 
+    @Test
+    public void pesquisarDespesasPeloIdDoProjetoEnviadasParaAprovacao() {
+        Iterable <Despesa> listaDeDespesas = Arrays.asList(this.despesa);
 
+        Mockito.when(despesaRepository.findAllByProjetoAndStatus(this.projeto, Status.ENVIADO_PARA_APROVACAO)).thenReturn(listaDeDespesas);
+        Mockito.when(projetoService.pesquisarProjetoPeloId(this.projeto.getId())).thenReturn(this.projeto);
+
+        Assertions.assertSame(listaDeDespesas, despesaService.pesquisarDespesasEmUmProjetoComOStatus(this.projeto.getId(), Status.ENVIADO_PARA_APROVACAO));
+        Mockito.verify(despesaRepository, Mockito.times(1)).findAllByProjetoAndStatus(this.projeto, Status.ENVIADO_PARA_APROVACAO);
+    }
+
+    @Test
+    public void testarExcluirDespesaPeloCodigoCaminhoBom() {
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+
+        Mockito.when(despesaRepository.findById(this.despesa.getId())).thenReturn(optionalDespesa);
+        Mockito.doNothing().when(notaFiscalService).excluirNotaFiscalPeloCodigo(this.despesa.getNotaFiscal().getCodigoDaNota());
+        Mockito.doNothing().when(despesaRepository).delete(this.despesa);
+
+        despesaService.excluirDespesaPeloCodigo(this.despesa.getId());
+
+        Mockito.verify(notaFiscalService, Mockito.times(1)).excluirNotaFiscalPeloCodigo(notaFiscal.getCodigoDaNota());
+        Mockito.verify(despesaRepository, Mockito.times(1)).delete(this.despesa);
+    }
+
+    @Test
+    public void testarExcluirDespesaPeloCodigoCaminhoRuimDespesaJaEstaComStatus() {
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+
+        Mockito.when(despesaRepository.findById(this.despesa.getId())).thenReturn(optionalDespesa);
+        Mockito.doNothing().when(notaFiscalService).excluirNotaFiscalPeloCodigo(this.despesa.getNotaFiscal().getCodigoDaNota());
+        Mockito.doNothing().when(despesaRepository).delete(this.despesa);
+
+        despesa.setStatus(Status.APROVADO);
+        Assertions.assertThrows(DespesaJaAprovadaException.class, () -> {
+            despesaService.excluirDespesaPeloCodigo(despesa.getId());
+        });
+
+        despesa.setStatus(Status.REPROVADO);
+        Assertions.assertThrows(DespesaJaReprovadaException.class, () -> {
+            despesaService.excluirDespesaPeloCodigo(despesa.getId());
+        });
+
+        Mockito.verify(notaFiscalService, Mockito.never()).excluirNotaFiscalPeloCodigo(notaFiscal.getCodigoDaNota());
+        Mockito.verify(despesaRepository, Mockito.never()).delete(this.despesa);
+    }
 
 }
