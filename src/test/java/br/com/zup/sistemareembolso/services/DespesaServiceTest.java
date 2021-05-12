@@ -353,4 +353,15 @@ public class DespesaServiceTest {
         Mockito.verify(despesaRepository, Mockito.never()).delete(this.despesa);
     }
 
+    @Test
+    public void testarPesquisarDespesasPeloCodigoDaNotaFiscal() {
+        Iterable <Despesa> listaDeDespesas = Arrays.asList(this.despesa);
+
+        Mockito.when(despesaRepository.findAllByNotaFiscal_codigoDaNota(this.despesa.getNotaFiscal().getCodigoDaNota())).thenReturn(listaDeDespesas);
+
+        Assertions.assertSame(listaDeDespesas, despesaService.pesquisarDespesasPeloCodigoDaNotaFiscal(this.despesa.getNotaFiscal().getCodigoDaNota()));
+
+        Mockito.verify(despesaRepository, Mockito.times(1)).findAllByNotaFiscal_codigoDaNota(this.despesa.getNotaFiscal().getCodigoDaNota());
+    }
+
 }
