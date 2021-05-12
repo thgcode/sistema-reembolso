@@ -38,7 +38,7 @@ public class ProjetoService {
 
     public Projeto adicionarProjeto(Projeto projeto, Colaborador colaborador) {
         Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
-        
+
         try {
             return validarProjeto(projeto, colaboradorDoBanco); // Não deve executar o return daqui, mas precisou colocar pra compilar
         } catch (ProjetoNaoExistenteException exception) {

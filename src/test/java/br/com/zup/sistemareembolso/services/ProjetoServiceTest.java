@@ -1,13 +1,14 @@
-package br.com.zup.sistemareembolso.service;
+package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.exceptions.DoisProjetosTemOMesmoCodigoException;
+import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaCriarProjetoException;
 import br.com.zup.sistemareembolso.exceptions.ProjetoNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.ProjetoRepetidoException;
+import br.com.zup.sistemareembolso.models.Cargo;
+import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.repositories.ProjetoRepository;
-import br.com.zup.sistemareembolso.services.LocalidadeService;
-import br.com.zup.sistemareembolso.services.ProjetoService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,9 +31,14 @@ public class ProjetoServiceTest {
     @MockBean
     private LocalidadeService localidadeService;
 
+    @MockBean
+    private ColaboradorService colaboradorService;
+
     private Projeto projeto;
 
     private Localidade localidade;
+
+    private Colaborador diretor;
 
     @BeforeEach
     public void setUp() {
@@ -48,15 +54,36 @@ public class ProjetoServiceTest {
         localidade.setNome("Pelotas");
 
         projeto.setLocalidade(localidade);
+
+        diretor = new Colaborador();
+        diretor.setNomeCompleto("Thiago Seus");
+        diretor.setCargo(Cargo.DIRETOR);
+        diretor.setEmail("thiago.seus@zup.com.br");
     }
 
     @Test
     public void testarAdicionarProjetoCaminhoPositivo() {
         Mockito.when(projetoRepository.save(Mockito.any(Projeto.class))).thenReturn(projeto);
         Mockito.when(localidadeService.pesquisarLocalidadePeloCodigo(1)).thenReturn(localidade);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(diretor.getCpf())).thenReturn(diretor);
 
-        Assertions.assertSame(projeto, projetoService.adicionarProjeto(projeto));
+        Assertions.assertSame(projeto, projetoService.adicionarProjeto(projeto, diretor));
         Mockito.verify(projetoRepository, Mockito.times(1)).save(projeto);
+    }
+
+    @Test
+    public void testarAdicionarProjetoCaminhoRuimOperacionalQuerCriarProjeto() {
+        Mockito.when(projetoRepository.save(Mockito.any(Projeto.class))).thenReturn(projeto);
+        Mockito.when(localidadeService.pesquisarLocalidadePeloCodigo(1)).thenReturn(localidade);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(diretor.getCpf())).thenReturn(diretor);
+
+        diretor.setCargo(Cargo.OPERACIONAL);
+
+        Assertions.assertThrows(PermissaoNegadaParaCriarProjetoException.class, () -> {
+            projetoService.adicionarProjeto(projeto, diretor);
+        });
+
+        Mockito.verify(projetoRepository, Mockito.never()).save(projeto);
     }
 
     @Test
@@ -64,9 +91,10 @@ public class ProjetoServiceTest {
         Mockito.when(projetoRepository.save(Mockito.any(Projeto.class))).thenReturn(projeto);
         Mockito.when(projetoRepository.findByNomeDoProjeto(projeto.getNomeDoProjeto())).thenReturn(Optional.of(projeto));
         Mockito.when(localidadeService.pesquisarLocalidadePeloCodigo(1)).thenReturn(localidade);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(diretor.getCpf())).thenReturn(diretor);
 
         Assertions.assertThrows(ProjetoRepetidoException.class, () -> {
-            projetoService.adicionarProjeto(projeto);
+            projetoService.adicionarProjeto(projeto, diretor);
         });
 
         Mockito.verify(projetoRepository, Mockito.never()).save(projeto);
@@ -78,9 +106,10 @@ public class ProjetoServiceTest {
         Mockito.when(projetoRepository.findByNomeDoProjeto(projeto.getNomeDoProjeto())).thenReturn(Optional.empty());
         Mockito.when(projetoRepository.findByCodigoDoProjeto(projeto.getCodigoDoProjeto())).thenReturn(Optional.of(projeto));
         Mockito.when(localidadeService.pesquisarLocalidadePeloCodigo(1)).thenReturn(localidade);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(diretor.getCpf())).thenReturn(diretor);
 
         Assertions.assertThrows(DoisProjetosTemOMesmoCodigoException.class, () -> {
-            projetoService.adicionarProjeto(projeto);
+            projetoService.adicionarProjeto(projeto, diretor);
         });
 
         Mockito.verify(projetoRepository, Mockito.never()).save(projeto);
