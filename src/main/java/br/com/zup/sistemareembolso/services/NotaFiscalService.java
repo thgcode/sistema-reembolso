@@ -1,6 +1,7 @@
 package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.config.ConfiguracaoDaImagemDaNotaFiscal;
+import br.com.zup.sistemareembolso.exceptions.ArmazenarArquivoException;
 import br.com.zup.sistemareembolso.exceptions.CaminhoDoArquivoInvalidoException;
 import br.com.zup.sistemareembolso.exceptions.NotaFiscalForaDaValidadeException;
 import br.com.zup.sistemareembolso.exceptions.NotaFiscalNaoExistenteException;
@@ -61,8 +62,7 @@ public class NotaFiscalService {
 
             return nomeDoArquivo;
         } catch (IOException ex) {
-            throw new RuntimeException(
-                    "Não foi possivel armazenar o arquivo " + nomeDoArquivo + ". Por favor tente novamente!", ex);
+            throw new ArmazenarArquivoException(nomeDoArquivo, ex);
         }
     }
 
