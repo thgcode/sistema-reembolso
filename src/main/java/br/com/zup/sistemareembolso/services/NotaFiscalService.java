@@ -1,10 +1,7 @@
 package br.com.zup.sistemareembolso.services;
 
 import br.com.zup.sistemareembolso.config.ConfiguracaoDaImagemDaNotaFiscal;
-import br.com.zup.sistemareembolso.exceptions.ArmazenarArquivoException;
-import br.com.zup.sistemareembolso.exceptions.CaminhoDoArquivoInvalidoException;
-import br.com.zup.sistemareembolso.exceptions.NotaFiscalForaDaValidadeException;
-import br.com.zup.sistemareembolso.exceptions.NotaFiscalNaoExistenteException;
+import br.com.zup.sistemareembolso.exceptions.*;
 import br.com.zup.sistemareembolso.models.Despesa;
 import br.com.zup.sistemareembolso.models.NotaFiscal;
 import br.com.zup.sistemareembolso.repositories.NotaFiscalRepository;
@@ -73,10 +70,10 @@ public class NotaFiscalService {
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new RuntimeException("Arquivo não encontrado " + nomeDoArquivo);
+                throw new ArquivoNaoEncontradoException(nomeDoArquivo);
             }
         } catch (MalformedURLException ex) {
-            throw new RuntimeException("Arquivo não encontrado " + nomeDoArquivo, ex);
+            throw new ArquivoNaoEncontradoException(nomeDoArquivo, ex);
         }
     }
 
@@ -108,7 +105,6 @@ public class NotaFiscalService {
 
     public void excluirNotaFiscalPeloCodigo(int codigoDaNota) {
         NotaFiscal notaFiscal = pesquisarNotaFiscal(codigoDaNota);
-
         notaFiscalRepository.delete(notaFiscal);
     }
 
