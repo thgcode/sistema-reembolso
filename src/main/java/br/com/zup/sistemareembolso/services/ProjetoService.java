@@ -72,7 +72,13 @@ public class ProjetoService {
         throw new ProjetoNaoExistenteException();
     }
 
-    public void excluirProjetoPeloId(int id) {
+    public void excluirProjetoPeloId(int id, Colaborador colaborador) {
+        Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
+
+        if (!colaborador.getCargo().equals(Cargo.GERENTE) && !colaborador.getCargo().equals(Cargo.DIRETOR)) {
+            throw new PermissaoNegadaParaExcluirProjetoException();
+        }
+
         Projeto projeto = pesquisarProjetoPeloId(id);
 
         projetoRepository.delete(projeto);

@@ -1,9 +1,6 @@
 package br.com.zup.sistemareembolso.services;
 
-import br.com.zup.sistemareembolso.exceptions.DoisProjetosTemOMesmoCodigoException;
-import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaCriarProjetoException;
-import br.com.zup.sistemareembolso.exceptions.ProjetoNaoExistenteException;
-import br.com.zup.sistemareembolso.exceptions.ProjetoRepetidoException;
+import br.com.zup.sistemareembolso.exceptions.*;
 import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Localidade;
@@ -132,7 +129,7 @@ public class ProjetoServiceTest {
 
         Assertions.assertSame(projeto, projetoService.pesquisarProjetoPeloId(1));
 
-Mockito.verify(projetoRepository, Mockito.times(1)).findById(1);
+        Mockito.verify(projetoRepository, Mockito.times(1)).findById(1);
     }
 
     @Test
@@ -168,19 +165,36 @@ Mockito.verify(projetoRepository, Mockito.times(1)).findById(1);
     public void testarExcluirProjetoPeloIdCaminhoBom() {
         Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(Optional.of(projeto));
         Mockito.doNothing().when(projetoRepository).delete(projeto);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(diretor.getCpf())).thenReturn(diretor);
 
-        projetoService.excluirProjetoPeloId(projeto.getId());
+        projetoService.excluirProjetoPeloId(projeto.getId(), diretor);
 
         Mockito.verify(projetoRepository, Mockito.times(1)).delete(projeto);
+    }
+
+    @Test
+    public void testarExcluirProjetoPeloIdCaminhoRuimOperacionalQuerExcluirProjeto() {
+        Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(Optional.of(projeto));
+        Mockito.doNothing().when(projetoRepository).delete(projeto);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(diretor.getCpf())).thenReturn(diretor);
+
+        diretor.setCargo(Cargo.OPERACIONAL);
+
+        Assertions.assertThrows(PermissaoNegadaParaExcluirProjetoException.class, () -> {
+            projetoService.excluirProjetoPeloId(projeto.getId(), diretor);
+        });
+
+        Mockito.verify(projetoRepository, Mockito.never()).save(projeto);
     }
 
     @Test
     public void testarExcluirProjetoPeloIdCaminhoRuim() {
         Mockito.when(projetoRepository.findById(projeto.getId())).thenReturn(Optional.empty());
         Mockito.doNothing().when(projetoRepository).delete(projeto);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(diretor.getCpf())).thenReturn(diretor);
 
         Assertions.assertThrows(ProjetoNaoExistenteException.class, () -> {
-            projetoService.excluirProjetoPeloId(projeto.getId());
+            projetoService.excluirProjetoPeloId(projeto.getId(), diretor);
         });
 
         Mockito.verify(projetoRepository, Mockito.never()).delete(projeto);

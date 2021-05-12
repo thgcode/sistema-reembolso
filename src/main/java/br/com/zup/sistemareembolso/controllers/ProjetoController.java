@@ -47,7 +47,12 @@ public class ProjetoController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluirProjetoPeloId(@PathVariable int id) {
-        projetoService.excluirProjetoPeloId(id);
+    public void excluirProjetoPeloId(@PathVariable int id, Authentication autenticacao) {
+        ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
+
+        Colaborador colaborador = new Colaborador();
+        colaborador.setCpf(login.getCpf());
+
+        projetoService.excluirProjetoPeloId(id, colaborador);
     }
 }
