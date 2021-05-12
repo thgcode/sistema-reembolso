@@ -22,7 +22,7 @@ public class EntradaDespesaDTO {
     private int projetoId;
 
     @Positive
-    private Integer categoriaId;
+    private int categoriaId;
 
     @NotNull
     private EntradaNotaFiscalDTO notaFiscal;
@@ -50,8 +50,8 @@ public class EntradaDespesaDTO {
         this.projetoId = projetoId;
     }
 
-    public Integer getCategoriaId() { return categoriaId; }
-    public void setCategoriaId(Integer categoriaId) { this.categoriaId = categoriaId; }
+    public int getCategoriaId() { return categoriaId; }
+    public void setCategoriaId(int categoriaId) { this.categoriaId = categoriaId; }
 
     public EntradaNotaFiscalDTO getNotaFiscal() {
         return notaFiscal;
