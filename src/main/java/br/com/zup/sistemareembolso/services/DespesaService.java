@@ -94,7 +94,7 @@ public class DespesaService {
         return despesaRepository.save(objetoDespesa);
     }
 
-    public void validarSePodeAprovarDespesa(Despesa despesaDoBanco, Colaborador colaboradorDoBanco) {
+    private void validarSePodeAprovarDespesa(Despesa despesaDoBanco, Colaborador colaboradorDoBanco) {
         if (despesaDoBanco.getStatus() == Status.APROVADO) {
             throw new DespesaJaAprovadaException();
         }
@@ -126,7 +126,7 @@ public class DespesaService {
         return despesaRepository.save(despesaDoBanco);
     }
 
-    public Despesa desaprovarDespesa(Despesa despesa, Colaborador colaborador) {
+    public Despesa reprovarDespesa(Despesa despesa, Colaborador colaborador) {
         Despesa despesaDoBanco = buscarDespesaPeloId(despesa.getId());
         Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
 
