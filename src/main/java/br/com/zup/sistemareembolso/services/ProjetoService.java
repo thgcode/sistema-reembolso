@@ -1,9 +1,8 @@
 package br.com.zup.sistemareembolso.services;
 
-import br.com.zup.sistemareembolso.exceptions.DoisProjetosTemOMesmoCodigoException;
-import br.com.zup.sistemareembolso.exceptions.ProjetoNaoExistenteException;
-import br.com.zup.sistemareembolso.exceptions.ProjetoRepetidoException;
-import br.com.zup.sistemareembolso.exceptions.VerbaDoProjetoInsuficienteException;
+import br.com.zup.sistemareembolso.exceptions.*;
+import br.com.zup.sistemareembolso.models.Cargo;
+import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Localidade;
 import br.com.zup.sistemareembolso.models.Projeto;
 import br.com.zup.sistemareembolso.repositories.ProjetoRepository;
@@ -20,7 +19,14 @@ public class ProjetoService {
     @Autowired
     private LocalidadeService localidadeService;
 
-    private Projeto validarProjeto(Projeto projeto) {
+    @Autowired
+    private ColaboradorService colaboradorService;
+
+    private Projeto validarProjeto(Projeto projeto, Colaborador colaborador) {
+        if (!colaborador.getCargo().equals(Cargo.GERENTE) && !colaborador.getCargo().equals(Cargo.DIRETOR)) {
+            throw new PermissaoNegadaParaCriarProjetoException();
+        }
+
         try {
             Projeto projetoDoBanco = pesquisarProjetoPeloNome(projeto.getNomeDoProjeto());
             throw new ProjetoRepetidoException();
@@ -30,9 +36,11 @@ public class ProjetoService {
         }
     }
 
-    public Projeto adicionarProjeto(Projeto projeto) {
+    public Projeto adicionarProjeto(Projeto projeto, Colaborador colaborador) {
+        Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
+
         try {
-            return validarProjeto(projeto); // Não deve chegar aqui
+            return validarProjeto(projeto, colaboradorDoBanco); // Não deve executar o return daqui, mas precisou colocar pra compilar
         } catch (ProjetoNaoExistenteException exception) {
             Localidade localidade = localidadeService.pesquisarLocalidadePeloCodigo(projeto.getLocalidade().getCodLocalidade());
             projeto.setLocalidade(localidade);
@@ -64,7 +72,13 @@ public class ProjetoService {
         throw new ProjetoNaoExistenteException();
     }
 
-    public void excluirProjetoPeloId(int id) {
+    public void excluirProjetoPeloId(int id, Colaborador colaborador) {
+        Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
+
+        if (!colaborador.getCargo().equals(Cargo.GERENTE) && !colaborador.getCargo().equals(Cargo.DIRETOR)) {
+            throw new PermissaoNegadaParaExcluirProjetoException();
+        }
+
         Projeto projeto = pesquisarProjetoPeloId(id);
 
         projetoRepository.delete(projeto);
