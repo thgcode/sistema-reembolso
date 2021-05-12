@@ -75,7 +75,7 @@ public class ProjetoService {
     public void excluirProjetoPeloId(int id, Colaborador colaborador) {
         Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
 
-        if (!colaborador.getCargo().equals(Cargo.GERENTE) && !colaborador.getCargo().equals(Cargo.DIRETOR)) {
+        if (!colaboradorDoBanco.getCargo().equals(Cargo.GERENTE) && !colaboradorDoBanco.getCargo().equals(Cargo.DIRETOR)) {
             throw new PermissaoNegadaParaExcluirProjetoException();
         }
 
