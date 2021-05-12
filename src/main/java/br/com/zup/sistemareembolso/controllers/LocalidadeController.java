@@ -43,7 +43,12 @@ public class LocalidadeController {
     }
 
     @DeleteMapping("{codLocalidade}/")
-    public void excluirLocalidadePeloId(@PathVariable int codLocalidade) {
-        localidadeService.excluirLocalidadePeloCodigo(codLocalidade);
+    public void excluirLocalidadePeloId(@PathVariable int codLocalidade, Authentication autenticacao) {
+        ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
+
+        Colaborador colaborador = new Colaborador();
+        colaborador.setCpf(login.getCpf());
+
+        localidadeService.excluirLocalidadePeloCodigo(codLocalidade, colaborador);
     }
 }

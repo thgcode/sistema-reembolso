@@ -3,6 +3,7 @@ package br.com.zup.sistemareembolso.services;
 import br.com.zup.sistemareembolso.exceptions.LocalidadeNaoExistenteException;
 import br.com.zup.sistemareembolso.exceptions.LocalidadeRepetidaException;
 import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaCriarLocalidadeException;
+import br.com.zup.sistemareembolso.exceptions.PermissaoNegadaParaExcluirLocalidadeException;
 import br.com.zup.sistemareembolso.models.Cargo;
 import br.com.zup.sistemareembolso.models.Colaborador;
 import br.com.zup.sistemareembolso.models.Localidade;
@@ -59,8 +60,14 @@ public class LocalidadeService {
         throw new LocalidadeNaoExistenteException();
     }
 
-    public void excluirLocalidadePeloCodigo(int codLocalidade) {
-Localidade localidade = pesquisarLocalidadePeloCodigo(codLocalidade);
+    public void excluirLocalidadePeloCodigo(int codLocalidade, Colaborador colaborador) {
+        Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
+
+        if (!colaboradorDoBanco.getCargo().equals(Cargo.GERENTE) && !colaboradorDoBanco.getCargo().equals(Cargo.DIRETOR)) {
+            throw new PermissaoNegadaParaExcluirLocalidadeException();
+        }
+
+        Localidade localidade = pesquisarLocalidadePeloCodigo(codLocalidade);
 
 localidadeRepository.delete(localidade);
     }
