@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class NotaFiscal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int codigoDaNota;
+    private Integer id;
 
     @Column(nullable = false)
     private String linkDaImagem;
@@ -21,18 +21,12 @@ public class NotaFiscal {
 
     }
 
-    public int getCodigoDaNota() {
-        return codigoDaNota;
-    }
-
-    public void setCodigoDaNota(int codigoDaNota) {
-        this.codigoDaNota = codigoDaNota;
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getLinkDaImagem() {
         return linkDaImagem;
     }
-
     public void setLinkDaImagem(String linkDaImagem) {
         this.linkDaImagem = linkDaImagem;
     }
@@ -40,7 +34,6 @@ public class NotaFiscal {
     public LocalDate getDataDeEmissao() {
         return dataDeEmissao;
     }
-
     public void setDataDeEmissao(LocalDate dataDeEmissao) {
         this.dataDeEmissao = dataDeEmissao;
     }
