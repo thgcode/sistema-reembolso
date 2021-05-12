@@ -79,7 +79,7 @@ public class DespesaController {
         Despesa despesa = new Despesa();
         despesa.setId(codDespesa);
 
-        return despesaService.desaprovarDespesa(despesa, colaborador);
+        return despesaService.reprovarDespesa(despesa, colaborador);
     }
 
     @DeleteMapping

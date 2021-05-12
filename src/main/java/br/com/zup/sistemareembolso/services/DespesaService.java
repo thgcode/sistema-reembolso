@@ -28,13 +28,12 @@ public class DespesaService {
         despesa.setStatus(Status.ENVIADO_PARA_APROVACAO);
         despesa.setDataEntrada(LocalDate.now());
 
-        /* Verificar se existe o colaborador */
         Colaborador colaborador = colaboradorService.pesquisarColaboradorPorCpf(despesa.getColaborador().getCpf());
         despesa.setColaborador(colaborador);
 
         Projeto projeto = projetoService.pesquisarProjetoPeloId(despesa.getProjeto().getId());
 
-        if (colaborador.getProjeto().getId() != colaborador.getProjeto().getId()) {
+        if (projeto.getId() != colaborador.getProjeto().getId()) {
             throw new ColaboradorNaoEstaNoProjetoException();
         }
 
@@ -94,7 +93,7 @@ public class DespesaService {
         return despesaRepository.save(objetoDespesa);
     }
 
-    public void validarSePodeAprovarDespesa(Despesa despesaDoBanco, Colaborador colaboradorDoBanco) {
+    private void validarSePodeAprovarDespesa(Despesa despesaDoBanco, Colaborador colaboradorDoBanco) {
         if (despesaDoBanco.getStatus() == Status.APROVADO) {
             throw new DespesaJaAprovadaException();
         }
@@ -126,7 +125,7 @@ public class DespesaService {
         return despesaRepository.save(despesaDoBanco);
     }
 
-    public Despesa desaprovarDespesa(Despesa despesa, Colaborador colaborador) {
+    public Despesa reprovarDespesa(Despesa despesa, Colaborador colaborador) {
         Despesa despesaDoBanco = buscarDespesaPeloId(despesa.getId());
         Colaborador colaboradorDoBanco = colaboradorService.pesquisarColaboradorPorCpf(colaborador.getCpf());
 

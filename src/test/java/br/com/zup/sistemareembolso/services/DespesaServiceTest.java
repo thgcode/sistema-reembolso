@@ -1,8 +1,6 @@
 package br.com.zup.sistemareembolso.services;
 
-import br.com.zup.sistemareembolso.exceptions.ColaboradorNaoEstaNoProjetoException;
-import br.com.zup.sistemareembolso.exceptions.DespesaNaoEncontradaException;
-import br.com.zup.sistemareembolso.exceptions.ErroDoSistemaException;
+import br.com.zup.sistemareembolso.exceptions.*;
 import br.com.zup.sistemareembolso.models.*;
 import br.com.zup.sistemareembolso.repositories.DespesaRepository;
 import org.junit.jupiter.api.Assertions;
@@ -52,13 +50,15 @@ public class DespesaServiceTest {
 
         this.gerente = new Colaborador();
         this.gerente.setCargo(Cargo.GERENTE);
-        this.gerente.setCpf("061.779.129-58");
+        this.gerente.setNomeCompleto("Thiago Seus");
+        this.gerente.setCpf("961.696.140-30");
 
         this.despesa.setColaborador(colaborador);
         this.despesa.setAprovador(gerente);
 
         this.projeto = new Projeto();
         this.projeto.setId(1);
+        this.projeto.setVerba(5000);
 
         this.colaborador.setProjeto(this.projeto);
         this.gerente.setProjeto(this.projeto);
@@ -79,7 +79,7 @@ public class DespesaServiceTest {
     }
 
     @Test
-    public void testarCadastrarDespesaCaminhoBom() {
+    public void testarCadastrarDespesaCaminhoBomComNotaFiscalJaCadastrada() {
 
         despesa.setStatus(Status.ENVIADO_PARA_APROVACAO);
         despesa.setDataEntrada(LocalDate.now());
@@ -89,32 +89,61 @@ public class DespesaServiceTest {
 
         despesa.setProjeto(this.projeto);
 
-        if (this.despesa.getNotaFiscal().getCodigoDaNota() > 0) {
-            Mockito.when(notaFiscalService.pesquisarNotaFiscal(1)).thenReturn(this.notaFiscal);
-        } else {
-            Mockito.when(notaFiscalService.adicionarNotaFiscal(this.despesa.getNotaFiscal())).thenReturn(this.notaFiscal);
-        }
-
+        this.notaFiscal.setCodigoDaNota(1);
+        Mockito.when(notaFiscalService.pesquisarNotaFiscal(1)).thenReturn(this.notaFiscal);
         despesa.setNotaFiscal(this.notaFiscal);
 
         Mockito.when(despesaRepository.save(Mockito.any(Despesa.class))).thenReturn(this.despesa);
 
         Assertions.assertSame(this.despesa, despesaService.adicionarDespesa(this.despesa));
+
+        Mockito.verify(notaFiscalService, Mockito.times(1)).pesquisarNotaFiscal(this.notaFiscal.getCodigoDaNota());
+        Mockito.verify(despesaRepository, Mockito.times(1)).save(this.despesa);
+        Mockito.verify(notaFiscalService, Mockito.never()).adicionarNotaFiscal(this.notaFiscal);
+    }
+
+    @Test
+    public void testarCadastrarDespesaCaminhoBomComNotaFiscalNaoCadastrada() {
+
+        despesa.setStatus(Status.ENVIADO_PARA_APROVACAO);
+        despesa.setDataEntrada(LocalDate.now());
+
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf("061.779.129-58")).thenReturn(this.colaborador);
+        Mockito.when(projetoService.pesquisarProjetoPeloId(1)).thenReturn(this.projeto);
+
+        despesa.setProjeto(this.projeto);
+
+        this.notaFiscal.setCodigoDaNota(0);
+        this.notaFiscal.setLinkDaImagem("teste");
+        this.notaFiscal.setDataDeEmissao(LocalDate.now());
+        Mockito.when(notaFiscalService.adicionarNotaFiscal(this.notaFiscal)).thenReturn(this.notaFiscal);
+        despesa.setNotaFiscal(this.notaFiscal);
+
+        Mockito.when(despesaRepository.save(Mockito.any(Despesa.class))).thenReturn(this.despesa);
+
+        Assertions.assertSame(this.despesa, despesaService.adicionarDespesa(this.despesa));
+
+        Mockito.verify(notaFiscalService, Mockito.never()).pesquisarNotaFiscal(this.notaFiscal.getCodigoDaNota());
+        Mockito.verify(notaFiscalService, Mockito.times(1)).adicionarNotaFiscal(this.notaFiscal);
         Mockito.verify(despesaRepository, Mockito.times(1)).save(this.despesa);
     }
 
     @Test
-    public void testarSeColaboradorEstaAlocadoNoProjeto(){
-        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf("061.779.129-58")).thenReturn(this.colaborador);
+    public void testarAdicionarDespesaCaminhoRuimColaboradorEstaAlocadoNoProjeto(){
+        Projeto projetoDoColaborador = new Projeto();
+        projeto.setId(2);
 
-        if (this.colaborador.getProjeto().getId() != this.colaborador.getProjeto().getId()) {
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.colaborador.getCpf())).thenReturn(this.colaborador);
+        Mockito.when(projetoService.pesquisarProjetoPeloId(this.projeto.getId())).thenReturn(this.projeto);
+        Mockito.when(projetoService.pesquisarProjetoPeloId(projetoDoColaborador.getId())).thenReturn(projetoDoColaborador);
 
-            Assertions.assertThrows(ColaboradorNaoEstaNoProjetoException.class, () -> {
-                despesaService.adicionarDespesa(this.despesa);
-            });
+        colaborador.setProjeto(projetoDoColaborador);
 
-            Mockito.verify(despesaRepository, Mockito.never()).save(this.despesa);
-        }
+        Assertions.assertThrows(ColaboradorNaoEstaNoProjetoException.class, () -> {
+            despesaService.adicionarDespesa(this.despesa);
+        });
+
+        Mockito.verify(despesaRepository, Mockito.never()).save(this.despesa);
     }
 
     @Test
@@ -204,11 +233,164 @@ public class DespesaServiceTest {
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, excecao.getStatus());
         Assertions.assertEquals("Despesa não encontrada", excecao.getMessage());
-
     }
 
-    // Testar a partir da linha 97
+    @Test
+    public void testarAprovarDespesaCaminhoBom() {
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+        Mockito.when(despesaRepository.findById(1)).thenReturn(optionalDespesa);
+        Mockito.when(despesaRepository.save(this.despesa)).thenReturn(this.despesa);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.colaborador.getCpf())).thenReturn(colaborador);
+        Mockito.when(projetoService.pesquisarProjetoPeloId(1)).thenReturn(this.projeto);
+        Mockito.when(projetoService.descontarValorDaDespesa(this.projeto.getId(), this.despesa.getValor())).thenReturn(projeto);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.gerente.getCpf())).thenReturn(gerente);
+
+        despesaService.aprovarDespesa(this.despesa, this.gerente);
+
+        Assertions.assertEquals(Status.APROVADO, despesa.getStatus());
+        Mockito.verify(despesaRepository, Mockito.times(1)).save(this.despesa);
+        Mockito.verify(projetoService, Mockito.times(1)).descontarValorDaDespesa(1, despesa.getValor());
+    }
+
+    @Test
+    public void testarAprovarDespesaCaminhoRuimColaboradorTentaAprovarSuaPropriaDespesa() {
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+        Mockito.when(despesaRepository.findById(1)).thenReturn(optionalDespesa);
+        Mockito.when(despesaRepository.save(this.despesa)).thenReturn(this.despesa);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.colaborador.getCpf())).thenReturn(colaborador);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.gerente.getCpf())).thenReturn(gerente);
+
+        Assertions.assertThrows(ColaboradorNaoEAprovadorException.class, () -> {
+            despesaService.aprovarDespesa(this.despesa, this.colaborador);
+        });
+
+        Mockito.verify(despesaRepository, Mockito.never()).save(this.despesa);
+    }
+
+    @Test
+    public void testarAprovarDespesaCaminhoRuimGerenteEDeOutroProjeto() {
+        Projeto projetoDoGerente = new Projeto();
+        projetoDoGerente.setId(2);
+        this.gerente.setProjeto(projetoDoGerente);
+
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+        Mockito.when(despesaRepository.findById(1)).thenReturn(optionalDespesa);
+        Mockito.when(despesaRepository.save(this.despesa)).thenReturn(this.despesa);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.colaborador.getCpf())).thenReturn(colaborador);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.gerente.getCpf())).thenReturn(gerente);
+
+        Assertions.assertThrows(ColaboradorNaoEstaNoProjetoException.class, () -> {
+            despesaService.aprovarDespesa(this.despesa, this.gerente);
+        });
+
+        Mockito.verify(despesaRepository, Mockito.never()).save(this.despesa);
+    }
+
+    @Test
+    public void testarReprovarDespesaCaminhoBom() {
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+        Mockito.when(despesaRepository.findById(1)).thenReturn(optionalDespesa);
+        Mockito.when(despesaRepository.save(this.despesa)).thenReturn(this.despesa);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.colaborador.getCpf())).thenReturn(colaborador);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.gerente.getCpf())).thenReturn(gerente);
+
+        despesaService.reprovarDespesa(this.despesa, this.gerente);
+
+        Assertions.assertEquals(Status.REPROVADO, despesa.getStatus());
+        Assertions.assertSame(this.gerente, this.despesa.getAprovador());
+        Mockito.verify(despesaRepository, Mockito.times(1)).save(this.despesa);
+    }
+
+    @Test
+    public void testarReprovarDespesaCaminhoRuimColaboradorTentaReprovarSuaPropriaDespesa() {
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+        Mockito.when(despesaRepository.findById(1)).thenReturn(optionalDespesa);
+        Mockito.when(despesaRepository.save(this.despesa)).thenReturn(this.despesa);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.colaborador.getCpf())).thenReturn(colaborador);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.gerente.getCpf())).thenReturn(gerente);
+
+        Assertions.assertThrows(ColaboradorNaoEAprovadorException.class, () -> {
+            despesaService.reprovarDespesa(this.despesa, this.colaborador);
+        });
+
+        Mockito.verify(despesaRepository, Mockito.never()).save(this.despesa);
+    }
+
+    @Test
+    public void testarReprovarDespesaCaminhoRuimGerenteEDeOutroProjeto() {
+        Projeto projetoDoGerente = new Projeto();
+        projetoDoGerente.setId(2);
+        this.gerente.setProjeto(projetoDoGerente);
+
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+        Mockito.when(despesaRepository.findById(1)).thenReturn(optionalDespesa);
+        Mockito.when(despesaRepository.save(this.despesa)).thenReturn(this.despesa);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.colaborador.getCpf())).thenReturn(colaborador);
+        Mockito.when(colaboradorService.pesquisarColaboradorPorCpf(this.gerente.getCpf())).thenReturn(gerente);
+
+        Assertions.assertThrows(ColaboradorNaoEstaNoProjetoException.class, () -> {
+            despesaService.reprovarDespesa(this.despesa, this.gerente);
+        });
+
+        Mockito.verify(despesaRepository, Mockito.never()).save(this.despesa);
+    }
+
+    @Test
+    public void pesquisarDespesasPeloIdDoProjetoEnviadasParaAprovacao() {
+        Iterable <Despesa> listaDeDespesas = Arrays.asList(this.despesa);
+
+        Mockito.when(despesaRepository.findAllByProjetoAndStatus(this.projeto, Status.ENVIADO_PARA_APROVACAO)).thenReturn(listaDeDespesas);
+        Mockito.when(projetoService.pesquisarProjetoPeloId(this.projeto.getId())).thenReturn(this.projeto);
+
+        Assertions.assertSame(listaDeDespesas, despesaService.pesquisarDespesasEmUmProjetoComOStatus(this.projeto.getId(), Status.ENVIADO_PARA_APROVACAO));
+        Mockito.verify(despesaRepository, Mockito.times(1)).findAllByProjetoAndStatus(this.projeto, Status.ENVIADO_PARA_APROVACAO);
+    }
+
+    @Test
+    public void testarExcluirDespesaPeloCodigoCaminhoBom() {
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+
+        Mockito.when(despesaRepository.findById(this.despesa.getId())).thenReturn(optionalDespesa);
+        Mockito.doNothing().when(notaFiscalService).excluirNotaFiscalPeloCodigo(this.despesa.getNotaFiscal().getCodigoDaNota());
+        Mockito.doNothing().when(despesaRepository).delete(this.despesa);
+
+        despesaService.excluirDespesaPeloCodigo(this.despesa.getId());
+
+        Mockito.verify(notaFiscalService, Mockito.times(1)).excluirNotaFiscalPeloCodigo(notaFiscal.getCodigoDaNota());
+        Mockito.verify(despesaRepository, Mockito.times(1)).delete(this.despesa);
+    }
+
+    @Test
+    public void testarExcluirDespesaPeloCodigoCaminhoRuimDespesaJaEstaComStatus() {
+        Optional <Despesa> optionalDespesa = Optional.of(this.despesa);
+
+        Mockito.when(despesaRepository.findById(this.despesa.getId())).thenReturn(optionalDespesa);
+        Mockito.doNothing().when(notaFiscalService).excluirNotaFiscalPeloCodigo(this.despesa.getNotaFiscal().getCodigoDaNota());
+        Mockito.doNothing().when(despesaRepository).delete(this.despesa);
+
+        despesa.setStatus(Status.APROVADO);
+        Assertions.assertThrows(DespesaJaAprovadaException.class, () -> {
+            despesaService.excluirDespesaPeloCodigo(despesa.getId());
+        });
+
+        despesa.setStatus(Status.REPROVADO);
+        Assertions.assertThrows(DespesaJaReprovadaException.class, () -> {
+            despesaService.excluirDespesaPeloCodigo(despesa.getId());
+        });
+
+        Mockito.verify(notaFiscalService, Mockito.never()).excluirNotaFiscalPeloCodigo(notaFiscal.getCodigoDaNota());
+        Mockito.verify(despesaRepository, Mockito.never()).delete(this.despesa);
+    }
+
+    @Test
+    public void testarPesquisarDespesasPeloCodigoDaNotaFiscal() {
+        Iterable <Despesa> listaDeDespesas = Arrays.asList(this.despesa);
+
+        Mockito.when(despesaRepository.findAllByNotaFiscal_codigoDaNota(this.despesa.getNotaFiscal().getCodigoDaNota())).thenReturn(listaDeDespesas);
+
+        Assertions.assertSame(listaDeDespesas, despesaService.pesquisarDespesasPeloCodigoDaNotaFiscal(this.despesa.getNotaFiscal().getCodigoDaNota()));
+
+        Mockito.verify(despesaRepository, Mockito.times(1)).findAllByNotaFiscal_codigoDaNota(this.despesa.getNotaFiscal().getCodigoDaNota());
+    }
+
 }
-
-
-
