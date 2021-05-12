@@ -36,6 +36,7 @@ public class LocalidadeServiceTest {
     @BeforeEach
     public void setUp() {
         localidade = new Localidade();
+        localidade.setId(1);
         localidade.setNome("Pelotas");
 
         diretor = new Colaborador();
@@ -129,21 +130,21 @@ public class LocalidadeServiceTest {
 
     @Test
     public void testarExcluirLocalidadePeloIdCaminhoBom() {
-        Mockito.when(localidadeRepository.findById(localidade.getCodLocalidade())).thenReturn(Optional.of(localidade));
+        Mockito.when(localidadeRepository.findById(localidade.getId())).thenReturn(Optional.of(localidade));
         Mockito.doNothing().when(localidadeRepository).delete(localidade);
 
-        localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade());
+        localidadeService.excluirLocalidadePeloCodigo(localidade.getId());
 
         Mockito.verify(localidadeRepository, Mockito.times(1)).delete(localidade);
     }
 
     @Test
     public void testarExcluirLocalidadePeloCodigoCaminhoRuim() {
-        Mockito.when(localidadeRepository.findById(localidade.getCodLocalidade())).thenReturn(Optional.empty());
+        Mockito.when(localidadeRepository.findById(localidade.getId())).thenReturn(Optional.empty());
         Mockito.doNothing().when(localidadeRepository).delete(localidade);
 
         Assertions.assertThrows(LocalidadeNaoExistenteException.class, () -> {
-            localidadeService.excluirLocalidadePeloCodigo(localidade.getCodLocalidade());
+            localidadeService.excluirLocalidadePeloCodigo(localidade.getId());
         });
     }
 

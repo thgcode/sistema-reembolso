@@ -160,6 +160,6 @@ public class DespesaService {
     }
 
     public Iterable <Despesa> pesquisarDespesasPeloCodigoDaNotaFiscal(int codigoDaNota) {
-        return despesaRepository.findAllByNotaFiscal_codigoDaNota(codigoDaNota);
+        return despesaRepository.findAllByNotaFiscal_id(codigoDaNota);
     }
 }

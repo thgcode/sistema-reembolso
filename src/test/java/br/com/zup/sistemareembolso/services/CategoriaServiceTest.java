@@ -31,7 +31,7 @@ public class CategoriaServiceTest {
     @BeforeEach
     public void setUp() {
         this.categoria = new Categoria();
-        categoria.setCodCategoria(1);
+        categoria.setId(1);
         categoria.setDescricao("Alimentação");
     }
 
@@ -75,7 +75,7 @@ public class CategoriaServiceTest {
         Categoria categoria = categoriaService.pesquisarCategoriaPorCodCategoria(10);
 
         Assertions.assertSame(this.categoria, categoria);
-        Assertions.assertEquals(categoria.getCodCategoria(),1);
+        Assertions.assertEquals(categoria.getId(),1);
     }
 
     @Test
@@ -94,10 +94,10 @@ public class CategoriaServiceTest {
     @Test
     public void testarExcluirCategoriaCaminhoBom(){
 
-        Mockito.when(categoriaRepository.findById(categoria.getCodCategoria())).thenReturn(Optional.of(this.categoria));
+        Mockito.when(categoriaRepository.findById(categoria.getId())).thenReturn(Optional.of(this.categoria));
         Mockito.doNothing().when(categoriaRepository).delete(this.categoria);
 
-        categoriaService.deletarCategoria(categoria.getCodCategoria());
+        categoriaService.deletarCategoria(categoria.getId());
 
         Mockito.verify(categoriaRepository, Mockito.times(1)).delete(this.categoria);
     }
