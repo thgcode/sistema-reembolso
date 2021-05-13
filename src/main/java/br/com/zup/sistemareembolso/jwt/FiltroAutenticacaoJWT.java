@@ -47,5 +47,6 @@ public class FiltroAutenticacaoJWT extends UsernamePasswordAuthenticationFilter 
         String username = ((ColaboradorLogin) authResult.getPrincipal()).getUsername();
         String token = gerenciadorJWT.gerarToken(username);
         response.addHeader("Authorization", "Token "+token);
+        response.addHeader("Access-Control-Expose-Headers", "Authorization");
     }
 }
