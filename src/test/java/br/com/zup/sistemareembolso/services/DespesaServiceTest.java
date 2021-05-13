@@ -13,8 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 @SpringBootTest
 public class DespesaServiceTest {
@@ -352,12 +351,29 @@ public class DespesaServiceTest {
 
         Mockito.when(despesaRepository.findById(this.despesa.getId())).thenReturn(optionalDespesa);
         Mockito.doNothing().when(notaFiscalService).excluirNotaFiscalPeloCodigo(this.despesa.getNotaFiscal().getId());
+        Mockito.when(despesaRepository.findAllByNotaFiscal_id(notaFiscal.getId())).thenReturn(new ArrayList <Despesa>());
         Mockito.doNothing().when(despesaRepository).delete(this.despesa);
 
         despesaService.excluirDespesaPeloCodigo(this.despesa.getId());
 
         Mockito.verify(notaFiscalService, Mockito.times(1)).excluirNotaFiscalPeloCodigo(notaFiscal.getId());
         Mockito.verify(despesaRepository, Mockito.times(1)).delete(this.despesa);
+        Mockito.verify(notaFiscalService, Mockito.times(1)).excluirNotaFiscalPeloCodigo(notaFiscal.getId());
+    }
+
+    @Test
+    public void testarExcluirDespesaPeloCodigoCaminhoBomTemMaisDeUmaDespesaCadastradaNaNota() {
+        Optional <Despesa> optionalDespesa = Optional.of(despesa);
+
+        Mockito.when(despesaRepository.findById(this.despesa.getId())).thenReturn(optionalDespesa);
+        Mockito.doNothing().when(notaFiscalService).excluirNotaFiscalPeloCodigo(this.despesa.getNotaFiscal().getId());
+        Mockito.doNothing().when(despesaRepository).delete(this.despesa);
+        Mockito.when(despesaRepository.findAllByNotaFiscal_id(notaFiscal.getId())).thenReturn(Arrays.asList(despesa));
+
+        despesaService.excluirDespesaPeloCodigo(this.despesa.getId());
+
+        Mockito.verify(despesaRepository, Mockito.times(1)).delete(this.despesa);
+        Mockito.verify(notaFiscalService, Mockito.never()).excluirNotaFiscalPeloCodigo(notaFiscal.getId());
     }
 
     @Test

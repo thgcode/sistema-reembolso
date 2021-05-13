@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -144,6 +147,20 @@ public class DespesaService {
         return despesaRepository.findAllByProjetoAndStatus(projeto, status);
     }
 
+    private void verificarSeTemQueExcluirNotaFiscal(NotaFiscal notaFiscal) {
+        Iterable <Despesa> iteravelDeDespesas = pesquisarDespesasPeloCodigoDaNotaFiscal(notaFiscal.getId());
+
+        List <Despesa> listaDeDespesas = new ArrayList();
+
+        for (Despesa despesa: iteravelDeDespesas) {
+            listaDeDespesas.add(despesa);
+        }
+
+        if (listaDeDespesas.isEmpty()) {
+            notaFiscalService.excluirNotaFiscalPeloCodigo(notaFiscal.getId());
+        }
+    }
+
     public void excluirDespesaPeloCodigo(int codigoDespesa) {
         Despesa despesa = buscarDespesaPeloId(codigoDespesa);
 
@@ -155,8 +172,9 @@ public class DespesaService {
             throw new DespesaJaReprovadaException();
         }
 
-        notaFiscalService.excluirNotaFiscalPeloCodigo(despesa.getNotaFiscal().getId());
         despesaRepository.delete(despesa);
+
+        verificarSeTemQueExcluirNotaFiscal(despesa.getNotaFiscal());
     }
 
     public Iterable <Despesa> pesquisarDespesasPeloCodigoDaNotaFiscal(int codigoDaNota) {
