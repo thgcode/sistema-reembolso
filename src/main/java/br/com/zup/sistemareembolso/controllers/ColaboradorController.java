@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/zupper/")
+@RequestMapping("zuppers/")
 public class ColaboradorController {
 
     @Autowired
