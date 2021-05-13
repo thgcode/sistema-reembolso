@@ -12,9 +12,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("/zupper/")
+@RequestMapping("zuppers/")
 public class ColaboradorController {
 
     @Autowired
@@ -31,14 +33,20 @@ public class ColaboradorController {
 
     @GetMapping("{cpf}/")
     @ResponseStatus(HttpStatus.OK)
-    public Colaborador pesquisarPeloCpf(@PathVariable EntradaColaboradorDTO colaboradorDTO){
+    public SaidaColaboradorDTO pesquisarColaboradorPeloCpf(@PathVariable EntradaColaboradorDTO colaboradorDTO){
         Colaborador colaborador = colaboradorDTO.converterDTOparaColaborador();
-        return  colaboradorService.pesquisarColaboradorPorCpf(colaboradorDTO.getCpf());
+        return SaidaColaboradorDTO.converterColaboradorParaDTO(colaboradorService.pesquisarColaboradorPorCpf(colaboradorDTO.getCpf()));
     }
 
     @GetMapping("porProjeto/{id}/")
-    public Iterable<Colaborador> pesquisarColaboradorPorProjeto(@PathVariable int id) {
-        return colaboradorService.pesquisarColaboradorPorProjeto(id);
+    public Iterable<SaidaColaboradorDTO> pesquisarColaboradoresPorProjeto(@PathVariable int id) {
+        List <SaidaColaboradorDTO> listaDeColaboradores = new ArrayList<>();
+
+        for (Colaborador colaborador: colaboradorService.pesquisarColaboradoresPorProjeto(id)) {
+            listaDeColaboradores.add(SaidaColaboradorDTO.converterColaboradorParaDTO(colaborador));
+        }
+
+        return listaDeColaboradores;
     }
 
     @DeleteMapping("{cpf}/")
@@ -48,13 +56,13 @@ public class ColaboradorController {
     }
 
     @PatchMapping("{cpf}/")
-    public Colaborador atualizarColaboradorParcial(@PathVariable String cpf, @RequestBody @Valid AtualizaColaboradorDTO atualizacaoParcialDTO, Authentication autenticacao) {
+    public SaidaColaboradorDTO atualizarColaboradorParcial(@PathVariable String cpf, @RequestBody @Valid AtualizaColaboradorDTO atualizacaoParcialDTO, Authentication autenticacao) {
         ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
 
         Colaborador colaboradorQueVaiAtualizar = new Colaborador();
         colaboradorQueVaiAtualizar.setCpf(login.getCpf());
 
         Colaborador colaborador = atualizacaoParcialDTO.converterDTOParaColaborador(cpf);
-        return colaboradorService.atualizarColaborador(colaboradorQueVaiAtualizar, colaborador);
+        return SaidaColaboradorDTO.converterColaboradorParaDTO(colaboradorService.atualizarColaborador(colaboradorQueVaiAtualizar, colaborador));
     }
 }

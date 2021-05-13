@@ -108,7 +108,7 @@ public class ColaboradorService {
         return colaboradorRepository.save(colaborador);
     }
 
-    public Iterable<Colaborador> pesquisarColaboradorPorProjeto(int idProjeto){
+    public Iterable<Colaborador> pesquisarColaboradoresPorProjeto(int idProjeto){
         return colaboradorRepository.findAllByProjetoId(idProjeto);
     }
 }
