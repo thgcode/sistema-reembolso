@@ -96,7 +96,7 @@ public class DespesaController {
         return SaidaDespesaDTO.converterDespesaParaDTO(despesaService.reprovarDespesa(despesa, colaborador));
     }
 
-    @DeleteMapping
+    @DeleteMapping("{codigoDespesa}/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluirDespesa(@PathVariable int codigoDespesa) {
         despesaService.excluirDespesaPeloCodigo(codigoDespesa);
