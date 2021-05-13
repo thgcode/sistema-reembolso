@@ -73,15 +73,15 @@ public class ColaboradorService {
             colaborador.setSenha(senhaEncoder);
         }
 
-        if(!colaborador.getBanco().equals(colaboradorAtualizado.getBanco()) && colaboradorAtualizado.getBanco() != null){
+        if ((colaborador.getBanco() == null || !colaborador.getBanco().equals(colaboradorAtualizado.getBanco())) && colaboradorAtualizado.getBanco() != null) {
             colaborador.setBanco(colaboradorAtualizado.getBanco());
         }
 
-        if(!colaborador.getNumeroDoBanco().equals(colaboradorAtualizado.getNumeroDoBanco()) && colaboradorAtualizado.getNumeroDoBanco() != null){
+        if ((colaborador.getNumeroDoBanco() == null || !colaborador.getNumeroDoBanco().equals(colaboradorAtualizado.getNumeroDoBanco())) && colaboradorAtualizado.getNumeroDoBanco() != null){
             colaborador.setNumeroDoBanco(colaboradorAtualizado.getNumeroDoBanco());
         }
 
-        if(!colaborador.getAgencia().equals(colaboradorAtualizado.getAgencia()) && colaboradorAtualizado.getAgencia() != null){
+        if ((colaborador.getAgencia() == null || !colaborador.getAgencia().equals(colaboradorAtualizado.getAgencia())) && colaboradorAtualizado.getAgencia() != null){
             colaborador.setAgencia(colaboradorAtualizado.getAgencia());
         }
 
@@ -89,7 +89,7 @@ public class ColaboradorService {
             colaborador.setDigitoDaAgencia(colaboradorAtualizado.getDigitoDaAgencia());
         }
 
-        if(!colaborador.getConta().equals(colaboradorAtualizado.getConta()) && colaboradorAtualizado.getConta() != null){
+        if ((colaborador.getConta() == null || !colaborador.getConta().equals(colaboradorAtualizado.getConta())) && colaboradorAtualizado.getConta() != null){
             colaborador.setConta(colaboradorAtualizado.getConta());
         }
 
