@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("projetos/")
@@ -21,7 +23,6 @@ public class ProjetoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-
     public SaidaProjetoDTO adicionarProjeto(@Valid @RequestBody EntradaProjetoDTO projetoDTO, Authentication autenticacao) {
         ColaboradorLogin login = (ColaboradorLogin)autenticacao.getPrincipal();
 
@@ -35,13 +36,19 @@ public class ProjetoController {
     }
 
     @GetMapping
-    public Iterable <Projeto> listarProjetos() {
-        return projetoService.listarProjetos();
+    public Iterable <SaidaProjetoDTO> listarProjetos() {
+        List <SaidaProjetoDTO> listaDeProjetos = new ArrayList<>();
+
+        for (Projeto projeto: projetoService.listarProjetos()) {
+            listaDeProjetos.add(SaidaProjetoDTO.converterProjetoParaDTO(projeto));
+        }
+
+        return listaDeProjetos;
     }
 
     @GetMapping("{id}/")
-    public Projeto pesquisarProjetoPeloId(@PathVariable int id) {
-        return projetoService.pesquisarProjetoPeloId(id);
+    public SaidaProjetoDTO pesquisarProjetoPeloId(@PathVariable int id) {
+        return SaidaProjetoDTO.converterProjetoParaDTO(projetoService.pesquisarProjetoPeloId(id));
     }
 
     @DeleteMapping
