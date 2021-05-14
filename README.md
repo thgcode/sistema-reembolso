@@ -20,6 +20,45 @@ Exemplos de valores para essa variável: `//localhost:3306/reembolso`
 
 * `TEMPO_EXPIRAR_TOKEN` especifica em quanto tempo (em mili-segundos) que um token JWT permanece válido.
 
+## Conta de administrador
+
+O sistema, quando é executado pela primeira vez, cria uma conta de administrador para que possam ser realizadas as operações de criação de categoria, localidade e projeto. Ele também cria uma categoria, localidade e projeto de teste para facilitar os testes.
+
+Para logar nesta conta, utilize o endpoint `/login` com as seguintes informações:
+
+cpf: 796.373.610-49
+Senha: teste123
+
+O token será enviado pelo header Authorization, e este deve ser enviado em todas as requisições subsequentes que necessitem do usuário logado no sistema.
+
 ## Endpoints
 
-Quando a API for executada, os endpoints disponíveis estarão disponíveis no Swagger, no link http://localhost:4200/swagger-ui.html .
+Quando a API for executada, os endpoints estarão disponíveis no Swagger, no link http://localhost:4200/swagger-ui.html .
+
+## Endpoints principais
+
+Post em `/despesas/` cria uma despesa.
+
+Parâmetros:
+
+{
+  "categoriaId": inteiro,
+  "descricao": "string",
+  "notaFiscal": {
+    "dataDeEmissao": "string",
+    "id": inteiro (opcional, se não for enviado usa o dados da nota fiscal),
+    "linkDaImagem": "string"
+  },
+  "projetoId": inteiro,
+  "valor": inteiro
+}
+
+Patch em /despesas/{id}/aprovar/ ou /despesas/{id}/desaprovar/
+
+Aprova ou desaprova uma despesa. Só o diretor (a conta de administrador) pode aprovar ou desaprovar uma despesa, ou um colaborador que tenha o cargo de diretor ou gerente. Quando uma despesa é aprovada, a verba respectiva ao valor da despesa é descontada do projeto em que ela foi cadastrada.
+
+Get em /despesas/projetos/{idProjeto}/paraAprovacao
+
+Lista as despesas que foram enviadas para aprovação.
+
+Get em /notasfiscais/{id}/ lista uma nota fiscal. Se várias despesas forem inseridas numa mesma nota fiscal, o valor da nota será devidamente somado.
